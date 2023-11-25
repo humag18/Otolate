@@ -3,10 +3,101 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>{{ title }}</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <title>Home Page</title>
 </head>
-<body>
-    <h1>{{ title }}</h1>
-    <p>{{ content }}</p>
+<body class="bg-gray-200 h-screen flex">
+
+    <!-- Leaderboard -->
+    <div id="leaderboard" class=" w-1/5 bg-gray-300 overflow-scroll">
+        <h2 class="text-2xl font-bold flex justify-center">Leaderboard</h2>
+        <div class="grid grid-cols-5 gap-4">
+            <ul class="text-sm p-2 col-span-4">
+                <h3>Username</h3>
+                {% for (user, score) in users %}
+                    <li>{{user}}</li>
+                {% endfor %}
+            </ul>
+            <ul class="col-span-1">
+                <h3>Score</h3>
+                {% for (user, score) in users %}
+                    <li>{{score}}</li>
+                {% endfor %}
+            </ul>
+        </div>
+    </div>
+
+    <!-- Vertical Alignment Container -->
+    <div class="flex flex-col justify-center w-4/5">
+
+        <div class="flex flex-col justify-center w-fit" style="margin-left: 30%;">
+            <!-- Challenge -->
+            <div id="challenge" class="my-4 border-black border rounded p-4 w-fit">
+                <p class="text-center text-2xl">The challenge is :</p>
+                <p class="text-center">Make a magic trick! AVADA KEDAVRA</p>
+            </div>
+            <!-- Form -->
+            <form action="" class="flex flex-col items-center mb-4">
+                <!-- Tools -->
+                <div id="tools" class="mb-4">
+                    {% if tool == "camera" %}
+                        <input type="file" accept="image/*" capture="camera" class="border rounded py-2 px-4">
+                    {% elif tool == "text" %}
+                        <input type="text" name="" id="" class="border rounded py-2 px-4">
+                    {% else %}
+                        <input type="file" name="" id="" class="border rounded py-2 px-4">
+                    {% endif %}
+                </div>
+                <!-- Submit Button -->
+                <button type="submit" class="py-2 px-4 bg-white border border-black rounded">Submit</button>
+            </form>
+        </div>
+    </div>
+
+    <!-- Profile -->
+    <div id="profileButton" class="absolute top-0 right-0 mt-4 mr-4 cursor-pointer">
+        <img src="../static/userIcon.png" alt="" class="w-12 h-12 rounded-full">
+    </div>
+
+    <!-- Slide-Over content -->
+    <div id="slideOver" class="fixed right-0 top-0 h-full w-64 bg-white shadow-lg transform translate-x-full transition-transform ease-in-out duration-300">
+        <!-- Your slide-over content goes here -->
+        <div class="p-4">
+            {% if username != None %}
+                <p>You are connected as :</p>
+                <h2>{{ username }}</h2>
+            {% else %}
+                <p>You are not connected, enter your username :</p>
+                <form action="">
+                    <input type="text" placeholder="Username" name="" id="">
+                    <button type="submit">Connect</button>
+                </form>
+            {% endif %}
+                
+            <!-- Close button -->
+            <button id="closeButton" class="mt-4 bg-gray-500 text-white py-2 px-4 rounded">Close</button>
+        </div>
+    </div>
+
+    <script>
+        const profileButton = document.getElementById('profileButton');
+        const slideOver = document.getElementById('slideOver');
+        const closeButton = document.getElementById('closeButton');
+
+        profileButton.addEventListener('click', () => {
+            slideOver.classList.remove('translate-x-full');
+        });
+
+        closeButton.addEventListener('click', () => {
+            slideOver.classList.add('translate-x-full');
+        });
+    </script>
+
+    
+
+    <script>
+        // Note: The tailwind.config part should be placed in a separate JavaScript file or directly in your Tailwind config file.
+        // I've omitted it here since it's not typically included in the HTML file.
+    </script>
 </body>
 </html>
