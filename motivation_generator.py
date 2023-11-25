@@ -24,7 +24,7 @@ from langchain.output_parsers import StructuredOutputParser
 import firebase_admin
 from firebase_admin import credentials, db
 
-openai.api_key = "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"
+openai.api_key = "api-key-openai"
 
 cred = credentials.Certificate("key.json")
 firebase_admin.initialize_app(cred, {"databaseURL": "https://otolate-bcc65-default-rtdb.europe-west1.firebasedatabase.app/"})
