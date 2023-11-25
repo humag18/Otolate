@@ -1,5 +1,5 @@
 import firebase_admin
-from firebase_admin import credentials, db
+from firebase_admin import credentials, db, firestore
 
 cred = credentials.Certificate("key.json")
 firebase_admin.initialize_app(cred,
@@ -33,6 +33,7 @@ chall_data = {
 ref_users.child(str(user_data["id"])).set(user_data)
 ref_chall.child(str(chall_data["id"])).set(chall_data)
 
+
 def getUsers():
     users_data = ref_users.get()
 
@@ -52,10 +53,12 @@ def getUsers():
         print("Erreur : users_data n'est pas une liste")
     return users
 
+
 def getUsersSortedByScore():
     users = getUsers()
     users.sort(key=lambda x: x[1], reverse=True)
     return users
+
 
 def getLastChallenge():
     challenges_data = ref_chall.get()
@@ -65,3 +68,28 @@ def getLastChallenge():
         last_challenge = [challenges_data[last_challenge_id]["content"], challenges_data[last_challenge_id]["output"]]
         return last_challenge
     return "Pas de challenge pour le moment !"
+def getUserById(id):
+    user_data = ref_users.child(str(id)).get()
+    return user_data
+
+
+def getUserByName(name):
+    user_data = ref_users.child(str(name)).get()
+    return user_data
+
+def createUser(name):
+    users = getUsers()
+    id = len(users) + 1
+    user_data = {
+        "id": id,
+        "username": name,
+        "score": 0,
+        "message": ""
+    }
+    ref_users.child(str(id)).set(user_data)
+    return getUserById(id)
+
+
+def getChallengeWithIdWhereUserIs(challenge_id, user_id):
+    challenge_data = ref_chall.child(str(challenge_id)).get()
+    return challenge_data["userOutput"][user_id]
