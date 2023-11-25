@@ -4,11 +4,6 @@ from flask import Flask, render_template, redirect, request, url_for
 from main import (getUsersSortedByScore, getLastChallenge, getUserIdByName, getUserById, createUser,
                   getChallengeWithIdWhereUserIs, addVideo)
 
-import firebase_admin
-from firebase_admin import credentials, db
-
-ref_video = db.reference("/video")
-
 app = Flask(__name__)
 
 current_user_glob = 0
