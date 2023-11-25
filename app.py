@@ -1,6 +1,13 @@
+import os
 from flask import Flask, render_template, redirect, request, url_for
-from main import getUsersSortedByScore, getLastChallenge, getUserIdByName, getUserById, createUser, \
-    getChallengeWithIdWhereUserIs
+
+from main import (getUsersSortedByScore, getLastChallenge, getUserIdByName, getUserById, createUser,
+                  getChallengeWithIdWhereUserIs, addVideo)
+
+import firebase_admin
+from firebase_admin import credentials, db
+
+ref_video = db.reference("/video")
 
 app = Flask(__name__)
 
@@ -22,15 +29,18 @@ def login():
 @app.route('/page/<username>')
 def page(username):
     global current_user_glob
+    print("page: ", current_user_glob)
     user = getUserById(current_user_glob)
     if user is None:
         user = createUser(username)
     username = user['username']
     users = getUsersSortedByScore()
-    challenge = getLastChallenge()[0]
-    tool = getLastChallenge()[1]
 
-    return render_template('page.html', users=users, username=username, tool=tool, challenge=challenge)
+    id_challenge, challenge = getLastChallenge()
+    output = challenge["output"]
+    content = challenge["content"]
+
+    return render_template('page.html', users=users, username=username, tool=output, challenge=content)
 
 @app.route('/challenges')
 def challenges():
@@ -46,6 +56,21 @@ def getAnswersFromChallenge(challenge_id):
         answer = (username, url)
         answers.append(answer)
     return answers
+
+@app.route('/upload_video', methods=['POST'])
+def upload_video():
+    global current_user_glob
+
+    print(current_user_glob)
+    if request.method == 'POST':
+        user_id = current_user_glob
+        
+        video_data = request.files['video']
+
+        video_content = video_data.read()
+        addVideo(user_id, video_content)
+
+        return "Video uploaded successfully!"
 
 if __name__ == '__main__':
     app.run(debug=True)
