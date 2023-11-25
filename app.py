@@ -1,6 +1,6 @@
 import os
 from flask import Flask, render_template, redirect, request, url_for
-from main import getUsersSortedByScore, getLastChallenge, getUserIdByName, getUserById, createUser, getChallengeWithIdWhereUserIs
+from main import getUsersSortedByScore, getLastChallenge, getUserIdByName, getUserById, createUser, getChallengeWithIdWhereUserIs, addVideo
 
 import firebase_admin
 from firebase_admin import credentials, db
@@ -53,20 +53,6 @@ def upload_video():
         video_url = addVideo(username, video_content)
 
         return "Video uploaded successfully!"
-
-
-@app.route('/upload_video', methods=['POST'])
-def upload_video():
-    if request.method == 'POST':
-        
-        username = request.form['username']
-        video_data = request.files['video']
-
-        video_content = video_data.read()
-        video_url = addVideo(username, video_content)
-
-        return "Video uploaded successfully!"
-
 
 if __name__ == '__main__':
     app.run(debug=True)
