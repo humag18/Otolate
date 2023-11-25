@@ -8,7 +8,7 @@
 </head>
 <body class="h-screen flex">
   <!-- Leaderboard -->
-  <div id="leaderboard" class=" w-1/5 bg-gray-300 overflow-scroll">
+  <div id="leaderboard" class=" w-1/5 bg-gray-300 overflow-scroll flex flex-col">
     <h2 class="text-2xl font-bold flex justify-center">Leaderboard</h2>
     <div class="grid grid-cols-5 gap-4">
         <ul class="text-sm p-2 col-span-4">
@@ -24,6 +24,7 @@
             {% endfor %}
         </ul>
     </div>
+    <button onclick="(() => {window.location.href = './page?username={{username}}'})()" class="w-[80%] p-4 border border-black rounded ml-[10%] mt-auto mb-10">Submit your challenge!</button>
 </div>
 
 <!-- To see the current challenge -->
@@ -55,6 +56,12 @@
         </div>
       {% endfor %}
     {%elif tool == "file"%}
+      {% for user, score in users%}
+        <h2 class="font-bold self-start ml-[15%]">{{user}} : </h2>
+        <div class="p-3 rounded border border-black w-[80%] mb-10">
+          <iframe src="" frameborder="0"></iframe>
+        </div>
+      {% endfor %}
     {% endif %}
   </div>
   

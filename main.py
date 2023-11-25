@@ -1,9 +1,20 @@
 import firebase_admin
+<<<<<<< HEAD
 from firebase_admin import credentials, db, firestore
 
 cred = credentials.Certificate("key.json")
 firebase_admin.initialize_app(cred,
     {"databaseURL": "https://otolate-bcc65-default-rtdb.europe-west1.firebasedatabase.app/"})
+=======
+from firebase_admin import credentials, db, storage
+
+cred = credentials.Certificate("key.json")
+firebase_admin.initialize_app(cred,
+                              {"databaseURL": "https://otolate-bcc65-default-rtdb.europe-west1.firebasedatabase.app/",
+                              "storageBucket": "otolate-bcc65.appspot.com"})
+
+bucket = storage.bucket()
+>>>>>>> 9bf76f206bdd1cccdf93c6f2932db1e836c9c246
 
 ref_users = db.reference("/users")
 ref_chall = db.reference("/challenges")
@@ -46,9 +57,14 @@ def getUsers():
             if user_info:
                 name = user_info.get('username', '')
                 score = user_info.get('score', 0)
+<<<<<<< HEAD
                 users.append((name, score))
             else:
                 print("Erreur : user_info est None pour un utilisateur")
+=======
+                id = user_info.get('id', 0)
+                users.append((name, score, id))
+>>>>>>> 9bf76f206bdd1cccdf93c6f2932db1e836c9c246
     else:
         print("Erreur : users_data n'est pas une liste")
     return users
@@ -73,9 +89,12 @@ def getUserById(id):
     return user_data
 
 
-def getUserByName(name):
-    user_data = ref_users.child(str(name)).get()
-    return user_data
+def getUserIdByName(name):
+    users = getUsers()
+    for user in users:
+        if user[0] == name:
+            return user[2]
+    return None
 
 def createUser(name):
     users = getUsers()
@@ -87,9 +106,25 @@ def createUser(name):
         "message": ""
     }
     ref_users.child(str(id)).set(user_data)
+    print("User created !")
     return getUserById(id)
 
 
 def getChallengeWithIdWhereUserIs(challenge_id, user_id):
     challenge_data = ref_chall.child(str(challenge_id)).get()
     return challenge_data["userOutput"][user_id]
+
+
+
+def addVideo(id, video): 
+    ref_video = db.reference("/vid")
+
+    blob = bucket.blob("_recorded_video.webm")
+    blob.upload_from_string(video, content_type='video/webm')
+    video_url = blob.public_url
+
+    ref_video.push().set({'id': id, 'video': video_url})
+
+if __name__ == "__main__":     
+
+    print(image_url)
