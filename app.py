@@ -22,5 +22,9 @@ def page():
     # current username of the connected user
     return render_template('page.html', users = [("Michel",12),("Pat",9),("Flav",14)], tool = "camera", username = "Palpalmall", challenge = "Make a magic trick! AVADA KEDAVRA")
 
+@app.route('/challenges')
+def challenges():
+    return render_template('challenges.html', users = [("Michel",12),("Pat",9),("Flav",14)], challenge = "Make a magic trick! AVADA KEDAVRA", challenges = ["mdr", "lol", "etc"], tool = "text")
+
 if __name__ == '__main__':
     app.run(debug=True)
