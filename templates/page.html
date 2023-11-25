@@ -256,8 +256,10 @@
                 outputVideo.controls = true;
             };
 
-            mediaRecorder.start();
+            console.log(outputVideo.src);
 
+            mediaRecorder.start();
+            
             startButton.disabled = true;
             startButton.style.backgroundColor = "lightgrey" 
             stopButton.style.backgroundColor = "#e5e7eb" 
@@ -267,19 +269,35 @@
         }
     }
 
-  function stopRecording() {
+  async function stopRecording() {
       if (mediaRecorder.state === 'recording') {
-          redDot.style.display = "none"
-          liveVideo.style.display = "none"
+            redDot.style.display = "none"
+            liveVideo.style.display = "none"
+            mediaRecorder.stop();
+            stream.getTracks().forEach(track => track.stop());
+            liveVideo.srcObject = null;
+    
+            await new Promise(resolve => {
+                mediaRecorder.onstop = resolve;
+            });
 
-          mediaRecorder.stop();
-          stream.getTracks().forEach(track => track.stop());
-          liveVideo.srcObject = null;
-  
-          startButton.disabled = false;
-          stopButton.disabled = true;
-          stopButton.style.backgroundColor = "lightgrey" 
-          startButton.style.backgroundColor = "#e5e7eb" 
+            const recordedBlob = new Blob(recordedChunks, { type: 'video/webm' });
+
+            const formData = new FormData();
+            formData.append('video', recordedBlob, 'recorded_video.webm');
+            formData.append('username', 'replace_with_username'); // replace_with_username with the actual username
+
+            const response = await fetch('/upload_video', {
+                method: 'POST',
+                body: formData,
+            });
+
+            const result = await response.text();
+
+            startButton.disabled = false;
+            stopButton.disabled = true;
+            stopButton.style.backgroundColor = "lightgrey" 
+            startButton.style.backgroundColor = "#e5e7eb" 
       }
   }
   

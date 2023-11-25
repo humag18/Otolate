@@ -1,9 +1,12 @@
 import firebase_admin
-from firebase_admin import credentials, db
+from firebase_admin import credentials, db, storage
 
 cred = credentials.Certificate("key.json")
 firebase_admin.initialize_app(cred,
-                              {"databaseURL": "https://otolate-bcc65-default-rtdb.europe-west1.firebasedatabase.app/"})
+                              {"databaseURL": "https://otolate-bcc65-default-rtdb.europe-west1.firebasedatabase.app/",
+                              "storageBucket": "otolate-bcc65.appspot.com"})
+
+bucket = storage.bucket()
 
 ref_users = db.reference("/users")
 ref_chall = db.reference("/challenges")
@@ -88,3 +91,18 @@ def createUser(name):
 def getChallengeWithIdWhereUserIs(challenge_id, user_id):
     challenge_data = ref_chall.child(str(challenge_id)).get()
     return challenge_data["userOutput"][user_id]
+
+
+
+def addVideo(id, video): 
+    ref_video = db.reference("/vid")
+
+    blob = bucket.blob("_recorded_video.webm")
+    blob.upload_from_string(video, content_type='video/webm')
+    video_url = blob.public_url
+
+    ref_video.push().set({'id': id, 'video': video_url})
+
+if __name__ == "__main__":     
+
+    print(image_url)

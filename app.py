@@ -1,5 +1,11 @@
+import os
 from flask import Flask, render_template, redirect, request, url_for
 from main import getUsersSortedByScore, getLastChallenge, getUserIdByName, getUserById, createUser, getChallengeWithIdWhereUserIs
+
+import firebase_admin
+from firebase_admin import credentials, db
+
+ref_video = db.reference("/video")
 
 app = Flask(__name__)
 
@@ -35,6 +41,32 @@ def page(username):
 def challenges():
     currentUser = request.args.get('username', default=None)
     return render_template('challenges.html', users = [("Michel",12),("Pat",9),("Flav",14)], challenge = "Make a magic trick! AVADA KEDAVRA", challenges = ["mdr", "lol", "etc"], tool = "text", username = currentUser)
+
+@app.route('/upload_video', methods=['POST'])
+def upload_video():
+    if request.method == 'POST':
+        
+        username = request.form['username']
+        video_data = request.files['video']
+
+        video_content = video_data.read()
+        video_url = addVideo(username, video_content)
+
+        return "Video uploaded successfully!"
+
+
+@app.route('/upload_video', methods=['POST'])
+def upload_video():
+    if request.method == 'POST':
+        
+        username = request.form['username']
+        video_data = request.files['video']
+
+        video_content = video_data.read()
+        video_url = addVideo(username, video_content)
+
+        return "Video uploaded successfully!"
+
 
 if __name__ == '__main__':
     app.run(debug=True)
