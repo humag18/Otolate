@@ -1,5 +1,6 @@
 from flask import Flask, render_template, redirect, request, url_for
-from main import getUsersSortedByScore, getLastChallenge, getUserIdByName, getUserById, createUser, getChallengeWithIdWhereUserIs
+from main import getUsersSortedByScore, getLastChallenge, getUserIdByName, getUserById, createUser, \
+    getChallengeWithIdWhereUserIs
 
 app = Flask(__name__)
 
@@ -35,6 +36,16 @@ def page(username):
 def challenges():
     currentUser = request.args.get('username', default=None)
     return render_template('challenges.html', users = [("Michel",12),("Pat",9),("Flav",14)], challenge = "Make a magic trick! AVADA KEDAVRA", challenges = ["mdr", "lol", "etc"], tool = "text", username = currentUser)
+
+def getAnswersFromChallenge(challenge_id):
+    users = getUsersSortedByScore()
+    answers = []
+    for user in users:
+        username = user[0]
+        url = getChallengeWithIdWhereUserIs(challenge_id, user[2])
+        answer = (username, url)
+        answers.append(answer)
+    return answers
 
 if __name__ == '__main__':
     app.run(debug=True)

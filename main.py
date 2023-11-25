@@ -73,7 +73,7 @@ def getUserIdByName(name):
 
 def createUser(name):
     users = getUsers()
-    id = len(users) + 1
+    id = len(users) + 2
     user_data = {
         "id": id,
         "username": name,
@@ -87,4 +87,11 @@ def createUser(name):
 
 def getChallengeWithIdWhereUserIs(challenge_id, user_id):
     challenge_data = ref_chall.child(str(challenge_id)).get()
-    return challenge_data["userOutput"][user_id]
+
+    if challenge_data:
+        user_id_str = str(user_id*10)
+        user_output = challenge_data.get("userOutput", {}).get(user_id_str)
+        print("user " + str(user_id) + " for this challenge : ", user_output)
+        return user_output
+    else:
+        return None
