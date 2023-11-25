@@ -33,8 +33,14 @@ def page(username):
 
 @app.route('/challenges')
 def challenges():
-    currentUser = request.args.get('username', default=None)
-    return render_template('challenges.html', users = [("Michel",12),("Pat",9),("Flav",14)], challenge = "Make a magic trick! AVADA KEDAVRA", challenges = ["mdr", "lol", "etc"], tool = "text", username = currentUser)
+    global current_user_glob
+    user = getUserById(current_user_glob)
+    username = user['username']
+    users = getUsersSortedByScore()
+    challenge = getLastChallenge()[0]
+    tool = getLastChallenge()[1]
+    #currentUser = request.args.get('username', default=None)
+    return render_template('challenges.html', users = users, challenge = challenge, challenges = [("Michel","mdr"), ("Pat","lol"), ("Flav","etc")], tool = tool, username = username)
 
 if __name__ == '__main__':
     app.run(debug=True)
