@@ -9,7 +9,7 @@ ref_chall = db.reference("/challenges")
 
 # Données de l'utilisateur
 user_data = {
-    "id": 3,
+    "id": 1,
     "username": "nom_utilisateur",
     "challenges": ["challenge1", "challenge2"],
     "score": 100
@@ -26,5 +26,6 @@ chall_data = {
 
 # Ajout de l'utilisateur à la base de données
 ref_users.child(str(user_data["id"])).set(user_data)
+ref_chall.child(str(chall_data["id"])).set(chall_data)
 
 print("Utilisateur ajouté avec succès!")
