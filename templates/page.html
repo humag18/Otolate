@@ -6,7 +6,7 @@
     <script src="https://cdn.tailwindcss.com"></script>
     <title>Home Page</title>
 </head>
-<body class="bg-gray-200 h-screen flex">
+<body class="h-screen flex">
     {% if username == None %}
         <script>
             window.location.href = "../"
@@ -15,27 +15,27 @@
 
     <!-- Leaderboard -->
     <div id="leaderboard" class=" w-1/5 bg-gray-300 overflow-scroll flex flex-col">
-        <h2 class="text-2xl font-bold flex justify-center">Leaderboard</h2>
+        <h2 class="text-2xl font-bold flex justify-center mb-5 mt-5">Leaderboard 🏆</h2>
         <div class="grid grid-cols-5 gap-4">
-            <ul class="text-sm p-2 col-span-4">
-                <h3>Username</h3>
+            <ul class="col-span-3 ml-2">
+                <h3 class="mb-5">Username</h3>
                 {% for (user, score, id) in users %}
                     <li>{{user}}</li>
                 {% endfor %}
             </ul>
-            <ul class="col-span-1">
-                <h3>Score</h3>
+            <ul class="col-span-2">
+                <h3 class="mb-5">Score ⭐</h3>
                 {% for (user, score, id) in users %}
-                    <li>{{score}}</li>
+                    <li class="text-center">{{score}}</li>
                 {% endfor %}
             </ul>
         </div>
-        <button onclick="(() => {window.location.href = './challenges?username={{username}}'})()" class="buttonAnim w-[80%] p-4 border border-black rounded ml-[10%] mt-auto mb-10">See submitted challenges!</button>
+        <button onclick="(() => {window.location.href = '/challenges'})()" class="buttonAnim w-[80%] p-4 border border-black rounded ml-[10%] mt-auto mb-10">See submitted challenges!</button>
     </div>
 
     <!-- To see the current challenge -->
     <!-- Vertical Alignment Container -->
-    <div class="flex flex-col justify-center w-4/5">
+    <div class="flex flex-col justify-center w-4/5" style="background:url(/static/theOffice.jpg) no-repeat center center fixed;">
         <div class="flex flex-col justify-center items-center w-[50%] ml-[10%] max-h-[60vh]">
             <!-- Challenge -->
             <div id="challenge" class="my-4 border-black border rounded p-4 w-fit">
@@ -77,10 +77,8 @@
                     {% endif %}
                 </div>
                 <!-- Submit Button -->
-                {% if tool != None and username != None %}
+                {% if tool != None and username != None and tool != "camera" %}
                     <button type="submit" class="buttonAnim py-2 px-4 bg-white border border-black rounded">Submit</button>
-                {% else %}
-                    <p>Please connect to your username before submitting your challenge</p>
                 {% endif %}
             </form>
         </div>
