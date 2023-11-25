@@ -11,15 +11,6 @@ bucket = storage.bucket()
 ref_users = db.reference("/users")
 ref_chall = db.reference("/challenges")
 
-# Données de l'utilisateur
-user_data = {
-    "id": 4,
-    "username": "mael",
-    "challenges": ["challenge1", "challenge2"],
-    "score": 0,
-    "message": "t'es super naze"
-}
-
 chall_data = {
     "id": 1002,
     "content": "arrêt maladie !",
@@ -31,9 +22,6 @@ chall_data = {
     "time start": "13:40",
     "time end": "13:50"
 }
-
-# Ajout de l'utilisateur à la base de données
-ref_users.child(str(user_data["id"])).set(user_data)
 ref_chall.child(str(chall_data["id"])).set(chall_data)
 
 
@@ -51,6 +39,8 @@ def getUsers():
                 score = user_info.get('score', 0)
                 id = user_info.get('id', 0)
                 users.append((name, score, id))
+            else:
+                print("Erreur : user_info est None pour un utilisateur")
     else:
         print("Erreur : users_data n'est pas une liste")
     return users
@@ -127,7 +117,6 @@ def addVideo(id, video):
     db.reference(ref_challenge).child('userOutput').update(userOutputData)
 
     print("done")
-
 
 if __name__ == "__main__":
     print(image_url)
