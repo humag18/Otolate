@@ -1,11 +1,10 @@
 import firebase_admin
-<<<<<<< HEAD
+
 from firebase_admin import credentials, db, firestore
 
 cred = credentials.Certificate("key.json")
 firebase_admin.initialize_app(cred,
     {"databaseURL": "https://otolate-bcc65-default-rtdb.europe-west1.firebasedatabase.app/"})
-=======
 from firebase_admin import credentials, db, storage
 
 cred = credentials.Certificate("key.json")
@@ -14,7 +13,6 @@ firebase_admin.initialize_app(cred,
                               "storageBucket": "otolate-bcc65.appspot.com"})
 
 bucket = storage.bucket()
->>>>>>> 9bf76f206bdd1cccdf93c6f2932db1e836c9c246
 
 ref_users = db.reference("/users")
 ref_chall = db.reference("/challenges")
@@ -57,14 +55,14 @@ def getUsers():
             if user_info:
                 name = user_info.get('username', '')
                 score = user_info.get('score', 0)
-<<<<<<< HEAD
+
                 users.append((name, score))
             else:
                 print("Erreur : user_info est None pour un utilisateur")
-=======
+
                 id = user_info.get('id', 0)
                 users.append((name, score, id))
->>>>>>> 9bf76f206bdd1cccdf93c6f2932db1e836c9c246
+
     else:
         print("Erreur : users_data n'est pas une liste")
     return users

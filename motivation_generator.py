@@ -8,6 +8,7 @@ from langchain.llms.base import LLM
 from langchain.llms.utils import enforce_stop_tokens
 from langchain.utils import get_from_dict_or_env
 from langchain.prompts import PromptTemplate
+from main import getUserIdByName, getUserById 
 
 import openai
 
@@ -24,10 +25,15 @@ from langchain.output_parsers import StructuredOutputParser
 import firebase_admin
 from firebase_admin import credentials, db
 
-openai.api_key = "api-key-openai"
+openai.api_key = "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"
 
 cred = credentials.Certificate("key.json")
 firebase_admin.initialize_app(cred, {"databaseURL": "https://otolate-bcc65-default-rtdb.europe-west1.firebasedatabase.app/"})
+
+userid = getUserIdByName("cameron")
+user = getUserById(userid)
+score = user['score']
+previous = user['previous_score']
 
 if score<previous:
     form = 0
