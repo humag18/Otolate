@@ -26,7 +26,7 @@ def page():
         user = createUser(current_user_glob)
     username = user['username']
     users = getUsersSortedByScore()
-    challenge = getChallengeWithIdWhereUserIs(1003, user['id'])
+    challenge = getLastChallenge()[0]
     tool = getLastChallenge()[1]
 
     return render_template('page.html', users=users, username=username, tool=tool, challenge=challenge)

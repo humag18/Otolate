@@ -30,13 +30,13 @@
                 {% endfor %}
             </ul>
         </div>
-        <button onclick="(() => {window.location.href = './challenges?username={{username}}'})()" class="w-[80%] p-4 border border-black rounded ml-[10%] mt-auto mb-10">See submitted challenges!</button>
+        <button onclick="(() => {window.location.href = './challenges?username={{username}}'})()" class="buttonAnim w-[80%] p-4 border border-black rounded ml-[10%] mt-auto mb-10">See submitted challenges!</button>
     </div>
 
     <!-- To see the current challenge -->
     <!-- Vertical Alignment Container -->
     <div class="flex flex-col justify-center w-4/5">
-        <div class="flex flex-col justify-center items-center w-fit" style="margin-left: 30%;">
+        <div class="flex flex-col justify-center items-center w-[50%] ml-[10%] max-h-[60vh]">
             <!-- Challenge -->
             <div id="challenge" class="my-4 border-black border rounded p-4 w-fit">
                 <p class="text-center text-2xl">The challenge is :</p>
@@ -52,8 +52,9 @@
                 <div id="tools" class="mb-4">
                     {% if tool == "camera" %}
                         
-                        <div class="flex-wrap flex-col justify-center items-center">
-                            <div class="camera flex flex-col justify-center items-center">
+                        <div class="flex-wrap flex-col justify-center items-center w-">
+                            <div class="camera flex flex-col justify-center items-center relative">
+                                <div id="redDot" class="animate-ping bg-red-600 rounded-full w-5 h-5 absolute top-0 right-0 m-2 hidden"></div>
                                 <video id="liveVideo">Le flux vidéo n'est pas disponible.</video>
                                 <div class="w-full flex justify-around my-5">
                                     <button type="button" id="startButton" class="px-4 py-4 border border-black rounded">Start Capture</button>
@@ -64,7 +65,7 @@
                             <canvas id="canvas" class="hidden"></canvas>
                             <div class="output flex flex-col justify-center">
                                 <img id="photo" class="hidden" alt="L'image capturée apparaîtra ici." />
-                                <video id="outputVideo" class="hidden w-full" style="height: calc(100%/(4/3));"></video>
+                                <video id="outputVideo" class="hidden w-[80%]" style="height: calc(80%/(4/3));"></video>
                             </div>
                         </div>
                     {% elif tool == "text" %}
@@ -77,7 +78,7 @@
                 </div>
                 <!-- Submit Button -->
                 {% if tool != None and username != None %}
-                    <button type="submit" class="py-2 px-4 bg-white border border-black rounded">Submit</button>
+                    <button type="submit" class="buttonAnim py-2 px-4 bg-white border border-black rounded">Submit</button>
                 {% else %}
                     <p>Please connect to your username before submitting your challenge</p>
                 {% endif %}
@@ -139,6 +140,7 @@
   const stopButton = document.getElementById('stopButton');
   const outputVideo = document.getElementById("outputVideo");
   const liveVideo = document.getElementById("liveVideo");
+  const redDot = document.getElementById('redDot');
   startButton.addEventListener('click', startRecording);
   stopButton.addEventListener('click', stopRecording);  
 
@@ -212,6 +214,9 @@
 
   function takepicture() {
     const context = canvas.getContext("2d");
+    liveVideo.style.display = "block"
+    outputVideo.style.display = "none"
+
     if (width && height) {
       canvas.width = width;
       canvas.height = height;
@@ -228,6 +233,8 @@
 
   async function startRecording() {
         try {
+            redDot.style.display = "block"
+            liveVideo.style.display = "block"
 
             stream = await navigator.mediaDevices.getUserMedia({ video: true, audio:true });
             liveVideo.srcObject = stream;
@@ -252,6 +259,8 @@
             mediaRecorder.start();
 
             startButton.disabled = true;
+            startButton.style.backgroundColor = "lightgrey" 
+            stopButton.style.backgroundColor = "#e5e7eb" 
             stopButton.disabled = false;
         } catch (error) {
             console.error('Error accessing media devices:', error);
@@ -260,12 +269,17 @@
 
   function stopRecording() {
       if (mediaRecorder.state === 'recording') {
+          redDot.style.display = "none"
+          liveVideo.style.display = "none"
+
           mediaRecorder.stop();
           stream.getTracks().forEach(track => track.stop());
           liveVideo.srcObject = null;
   
           startButton.disabled = false;
           stopButton.disabled = true;
+          stopButton.style.backgroundColor = "lightgrey" 
+          startButton.style.backgroundColor = "#e5e7eb" 
       }
   }
   
@@ -276,11 +290,16 @@
 
     </script>
 
-    
+    <style>
+        .buttonAnim:hover{
+            animation: "buttonAnim" 0.2s ease-in forwards;
+        }
 
-    <script>
-        // Note: The tailwind.config part should be placed in a separate JavaScript file or directly in your Tailwind config file.
-        // I've omitted it here since it's not typically included in the HTML file.
-    </script>
+        @keyframes buttonAnim{
+            100%{
+                box-shadow: 5px 5px 5px black;
+            }
+        }
+    </style>
 </body>
 </html>
