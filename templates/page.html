@@ -7,9 +7,14 @@
     <title>Home Page</title>
 </head>
 <body class="bg-gray-200 h-screen flex">
+    {% if username == None %}
+        <script>
+            window.location.href = "../"
+        </script>
+    {%endif%}
 
     <!-- Leaderboard -->
-    <div id="leaderboard" class=" w-1/5 bg-gray-300 overflow-scroll">
+    <div id="leaderboard" class=" w-1/5 bg-gray-300 overflow-scroll flex flex-col">
         <h2 class="text-2xl font-bold flex justify-center">Leaderboard</h2>
         <div class="grid grid-cols-5 gap-4">
             <ul class="text-sm p-2 col-span-4">
@@ -25,6 +30,7 @@
                 {% endfor %}
             </ul>
         </div>
+        <button onclick="(() => {window.location.href = './challenges?username={{username}}'})()" class="w-[80%] p-4 border border-black rounded ml-[10%] mt-auto mb-10">See submitted challenges!</button>
     </div>
 
     <!-- To see the current challenge -->
@@ -88,17 +94,10 @@
     <div id="slideOver" class="fixed right-0 top-0 h-full w-64 bg-white shadow-lg transform translate-x-full transition-transform ease-in-out duration-300">
         <!-- Your slide-over content goes here -->
         <div class="p-4">
-            {% if username != None %}
-                <p>You are connected as :</p>
-                <h2>{{ username }}</h2>
-            {% else %}
-                <p>You are not connected, enter your username :</p>
-                <form action="">
-                    <input type="text" placeholder="Username" name="" id="">
-                    <button type="submit">Connect</button>
-                </form>
-            {% endif %}
-                
+            
+            <p>You are connected as :</p>
+            <h2>{{ username }}</h2>
+            
             <!-- Close button -->
             <button id="closeButton" class="mt-4 bg-gray-500 text-white py-2 px-4 rounded">Close</button>
         </div>
@@ -116,6 +115,10 @@
         closeButton.addEventListener('click', () => {
             slideOver.classList.add('translate-x-full');
         });
+
+        function verifUsername(){
+
+        }
     </script>
 
     <script>
@@ -228,6 +231,7 @@
 
             stream = await navigator.mediaDevices.getUserMedia({ video: true, audio:true });
             liveVideo.srcObject = stream;
+            liveVideo.play()
 
             mediaRecorder = new MediaRecorder(stream);
 
@@ -264,6 +268,7 @@
           stopButton.disabled = true;
       }
   }
+  
   // On met en place un gestionnaire d'évènement pour exécuter
   // le code lorsque le chargement du document est terminé.
   window.addEventListener("load", startup, false);
