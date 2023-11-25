@@ -70,8 +70,10 @@
                     {% endif %}
                 </div>
                 <!-- Submit Button -->
-                {% if tool != None %}
+                {% if tool != None and username != None %}
                     <button type="submit" class="py-2 px-4 bg-white border border-black rounded">Submit</button>
+                {% else %}
+                    <p>Please connect to your username before submitting your challenge</p>
                 {% endif %}
             </form>
         </div>
@@ -137,21 +139,26 @@
   startButton.addEventListener('click', startRecording);
   stopButton.addEventListener('click', stopRecording);  
 
+  function launchLiveVideo(){
+    navigator.mediaDevices
+      .getUserMedia({ video: true})
+      .then((stream) => {
+        liveVideo.srcObject = stream;
+        liveVideo.play();
+        return stream
+      })
+      .catch((err) => {
+        console.error(`Une erreur est survenue : ${err}`);
+      });
+  }
+
   function startup() {
     
     canvas = document.getElementById("canvas");
     photo = document.getElementById("photo");
     photobutton = document.getElementById("photobutton");
 
-    navigator.mediaDevices
-      .getUserMedia({ video: true})
-      .then((stream) => {
-        liveVideo.srcObject = stream;
-        liveVideo.play();
-      })
-      .catch((err) => {
-        console.error(`Une erreur est survenue : ${err}`);
-      });
+    launchLiveVideo()
 
     liveVideo.addEventListener(
       "canplay",
@@ -200,13 +207,6 @@
     photo.setAttribute("src", data);
   }
 
-  // On capture une photo en récupérant le contenu courant de la
-  // vidéo, qu'on dessine dans un canevas puis qu'on convertit
-  // en une URL de données contenant l'image au format PNG.
-  // En utilisant un canevas en dehors de l'écran, on peut
-  // modifier sa taille et/ou appliquer d'autres modifications
-  // avant de l'afficher à l'écran.
-
   function takepicture() {
     const context = canvas.getContext("2d");
     if (width && height) {
@@ -225,8 +225,8 @@
 
   async function startRecording() {
         try {
-            stream = await navigator.mediaDevices.getUserMedia({ video: true, audio:true });
 
+            stream = await navigator.mediaDevices.getUserMedia({ video: true, audio:true });
             liveVideo.srcObject = stream;
 
             mediaRecorder = new MediaRecorder(stream);
