@@ -13,16 +13,20 @@ user_data = {
     "id": 4,
     "username": "mael",
     "challenges": ["challenge1", "challenge2"],
-    "score": 0
+    "score": 0,
+    "message": "t'es super naze"
 }
 
 chall_data = {
-    "id": 1003,
-    "content": "filme toi !",
+    "id": 1002,
+    "content": "arrêt maladie !",
     "output": "camera",
     "userOutput": {
-        1: "output"
-    }
+        2: "output",
+        "user_id": "1"
+    },
+    "time start": "13:40",
+    "time end": "13:50"
 }
 
 # Ajout de l'utilisateur à la base de données
@@ -52,7 +56,6 @@ def getUsersSortedByScore():
     users = getUsers()
     users.sort(key=lambda x: x[1], reverse=True)
     return users
-
 
 def getLastChallenge():
     challenges_data = ref_chall.get()
