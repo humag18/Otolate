@@ -1,47 +1,68 @@
-import together
 import os
-import logging
-from typing import Any, Dict, List, Mapping, Optional
 
-from pydantic import Extra, Field, root_validator
+import json
+import textwrap
 
 from langchain.callbacks.manager import CallbackManagerForLLMRun
 from langchain.llms.base import LLM
 from langchain.llms.utils import enforce_stop_tokens
 from langchain.utils import get_from_dict_or_env
-os.environ["TOGETHER_API_KEY"] = "api_key"
+from langchain.prompts import PromptTemplate
 
-class TogetherLLM(LLM):
-    model: str = "togethercomputer/llama-2-70b-chat"
-    together_api_key : str = os.environ["TOGETHER_API_KEY"]
-    temperature : float = 0.7
-    max_tokens : int = 512
+import openai
 
-    class Config:
-        extra = Extra.forbid
+import warnings
+warnings.filterwarnings('ignore')
 
-    @root_validator()
-    def validate_environement(cls, values :Dict) -> Dict:
-        api_key = get_from_dict_or_env( values, "together_api_key", "TOGETHER_API_KEY")
-        values["together_api_key"] = api_key
-        return values
-    @poperty
-    def _llm_type(self) -> str:
-        """The _llm type"""
-        return "together"
-    
-    def _call(self, prompts : str, **kwargs : Any) -> str:
-        together.api_key = self.together_api_key
-        output = together.Complete.create(prompt, model = self.model, max_tokens = self.max_tokens, temperature=self.temperature)
-        text = output['output']['choices'][0]['text']
-        return text
+from langchain.chat_models import ChatOpenAI
+from langchain.prompts import ChatPromptTemplate
+from langchain.chains import LLMChain, SimpleSequentialChain
+
+from langchain.output_parsers import ResponseSchema
+from langchain.output_parsers import StructuredOutputParser
 
 
-together.api_key = "9894800278097398cd3c35ead8d37d5e2d8405a99c472a13c4932db807f50448"
-models = together.Models.list()
 
-together.Models.start("togethercomputer/llama-2-70b-chat")
+openai.api_key = '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'
 
-test_llm = TogetherLLM(model = "togethercomputer/llama-2-70b-chat", temperature=0.8, max_tokens=512)
-type(test_llm), test_llm.model, test_llm.temperature
-test_llm("What are the olympics? ")
+form = """{
+    "challenge": "",
+    "output": "", 
+}"""
+
+llm_model = "gpt-3.5-turbo"
+llm = ChatOpenAI(temperature=0.7, model=llm_model, openai_api_key="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")
+
+FirstName = ResponseSchema(
+    name="challenge",
+    description="wtf and funny challenge to do in the office with all colleague"
+    )
+LastName = ResponseSchema(
+    name="output",
+    description="Challenge format: video, pics, audio, text"
+    )
+
+schemas = [FirstName, LastName]
+
+output_parser = StructuredOutputParser.from_response_schemas(schemas)
+format_instructions = output_parser.get_format_instructions()
+
+template = """\
+Hey you are a game master of wtf olympic in an office every day i ask to you what we do today and you responce will be a short sentence like: "curling with office chair" or "paper plane contest", "desk chair relay", "wtf blank text", 'biggest fart'! After that in dependance of the challenge you chose in those 4 formats (pics, video, text, audio)
+
+Format l'output as JSON avec les clés suivantes:
+challenge
+output
+
+
+Voici le formulaire à compléter {form}
+"""
+
+prompt = ChatPromptTemplate.from_template(template=template)
+
+messages = prompt.format_messages(form=form, 
+                                format_instructions=format_instructions)
+
+response = llm(messages)
+
+print(response.content)
