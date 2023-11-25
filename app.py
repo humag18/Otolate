@@ -31,5 +31,9 @@ def page():
 
     return render_template('page.html', users=users, username=username, tool=tool, challenge=challenge)
 
+@app.route('/challenges')
+def challenges():
+    return render_template('challenges.html', users = [("Michel",12),("Pat",9),("Flav",14)], challenge = "Make a magic trick! AVADA KEDAVRA", challenges = ["mdr", "lol", "etc"], tool = "text")
+
 if __name__ == '__main__':
     app.run(debug=True)
