@@ -34,7 +34,11 @@
             <!-- Challenge -->
             <div id="challenge" class="my-4 border-black border rounded p-4 w-fit">
                 <p class="text-center text-2xl">The challenge is :</p>
-                <p class="text-center">Make a magic trick! AVADA KEDAVRA</p>
+                {% if challenge != None %}
+                    <p class="text-center">{{ challenge }}</p>
+                {% else %}
+                    <p class="text-center">No challenge avaible for now</p>
+                {% endif %}
             </div>
             <!-- Form -->
             <form action="" class="flex flex-col items-center mb-4">
@@ -44,12 +48,16 @@
                         <input type="file" accept="image/*" capture="camera" class="border rounded py-2 px-4">
                     {% elif tool == "text" %}
                         <input type="text" name="" id="" class="border rounded py-2 px-4">
-                    {% else %}
+                    {% elif tool == "file" %}
                         <input type="file" name="" id="" class="border rounded py-2 px-4">
+                    {% else %}
+                        <!-- Nothing because there is no challenge available -->
                     {% endif %}
                 </div>
                 <!-- Submit Button -->
-                <button type="submit" class="py-2 px-4 bg-white border border-black rounded">Submit</button>
+                {% if tool != None %}
+                    <button type="submit" class="py-2 px-4 bg-white border border-black rounded">Submit</button>
+                {% endif %}
             </form>
         </div>
     </div>

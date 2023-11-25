@@ -20,7 +20,7 @@ def page():
     # users = [(username, score),...]
     # tool = challenge response excpected (text, camera, file)
     # current username of the connected user
-    return render_template('page.html', users = [("Michel",12),("Pat",9),("Flav",14)], tool = "text", username = "Palpalmall")
+    return render_template('page.html', users = [("Michel",12),("Pat",9),("Flav",14)], tool = "camera", username = "Palpalmall", challenge = "Make a magic trick! AVADA KEDAVRA")
 
 if __name__ == '__main__':
     app.run(debug=True)
