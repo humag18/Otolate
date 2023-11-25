@@ -1,0 +1,22 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+  <title>Username</title>
+</head>
+<body class="flex items-center justify-center h-screen bg-gray-200">
+  <div class="text-center h-1/2">
+    <h1 class="text-4xl font-bold mb-4">Welcome aboard!</h1>
+    <h2 class="text-2xl text-gray-600 mb-6">Please enter the username you will use</h2>
+    
+    <form action="./createUsername" method="post" class="flex flex-col items-center justify-around h-1/3">
+      <label for="input" class="block text-gray-700">Username:</label>
+      <input type="text" placeholder="Username" class="border rounded py-2 px-4 mt-1" name="username">
+      <button type="submit" class="bg-white border border-black rounded">Submit</button>
+    </form>
+    
+  </div>
+</body>
+</html>
