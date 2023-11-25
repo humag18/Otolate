@@ -22,6 +22,7 @@ chall_data = {
 
 ref_chall.child(str(chall_data["id"])).set(chall_data)
 
+
 def getUsers():
     users_data = ref_users.get()
 
@@ -39,10 +40,12 @@ def getUsers():
         print("Erreur : users_data n'est pas une liste")
     return users
 
+
 def getUsersSortedByScore():
     users = getUsers()
     users.sort(key=lambda x: x[1], reverse=True)
     return users
+
 
 def getLastChallenge():
     challenges_data = ref_chall.get()
@@ -53,13 +56,16 @@ def getLastChallenge():
         return last_challenge
     return "Pas de challenge pour le moment !"
 
+
 def getUserById(id):
     user_data = ref_users.child(str(id)).get()
     return user_data
 
+
 def getUserByName(name):
     user_data = ref_users.child(str(name)).get()
     return user_data
+
 
 def createUser(name):
     users = getUsers()
@@ -67,9 +73,13 @@ def createUser(name):
     user_data = {
         "id": id,
         "username": name,
-        "challenges": [],
         "score": 0,
         "message": ""
     }
     ref_users.child(str(id)).set(user_data)
     return getUserById(id)
+
+
+def getChallengeWithIdWhereUserIs(challenge_id, user_id):
+    challenge_data = ref_chall.child(str(challenge_id)).get()
+    return challenge_data["userOutput"][user_id]

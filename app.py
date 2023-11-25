@@ -1,5 +1,5 @@
 from flask import Flask, render_template, redirect, request, url_for
-from main import getUsersSortedByScore, getLastChallenge, getUserByName, createUser
+from main import getUsersSortedByScore, getLastChallenge, getUserByName, createUser, getChallengeWithIdWhereUserIs
 
 app = Flask(__name__)
 
@@ -26,7 +26,7 @@ def page():
         user = createUser(current_user_glob)
     username = user['username']
     users = getUsersSortedByScore()
-    challenge = getLastChallenge()[0]
+    challenge = getChallengeWithIdWhereUserIs(1003, user['id'])
     tool = getLastChallenge()[1]
 
     return render_template('page.html', users=users, username=username, tool=tool, challenge=challenge)
