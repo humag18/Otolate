@@ -81,8 +81,7 @@ def getLastChallenge():
 
     if challenges_data:
         last_challenge_id = max(challenges_data.keys())
-        last_challenge = [challenges_data[last_challenge_id]["content"], challenges_data[last_challenge_id]["output"]]
-        return last_challenge
+        return last_challenge_id, challenges_data[last_challenge_id]
     return "Pas de challenge pour le moment !"
 def getUserById(id):
     user_data = ref_users.child(str(id)).get()
@@ -115,15 +114,24 @@ def getChallengeWithIdWhereUserIs(challenge_id, user_id):
     return challenge_data["userOutput"][user_id]
 
 
-
 def addVideo(id, video): 
-    ref_video = db.reference("/vid")
+    id *= 10
+    id_challenge, challenge = getLastChallenge()
 
-    blob = bucket.blob("_recorded_video.webm")
+    userOutputData = challenge['userOutput']
+
+    blob = bucket.blob(f"{id}.webm")
     blob.upload_from_string(video, content_type='video/webm')
     video_url = blob.public_url
 
-    ref_video.push().set({'id': id, 'video': video_url})
+    userOutputData[id] = {"output": video_url, "type": "video"}
+
+    ref_challenge = "/challenges/{}".format(id_challenge)
+
+    print(ref_challenge)
+    db.reference(ref_challenge).child('userOutput').update(userOutputData)
+
+    print("done")
 
 if __name__ == "__main__":     
 

@@ -27,15 +27,18 @@ def login():
 @app.route('/page/<username>')
 def page(username):
     global current_user_glob
+    print("page: ", current_user_glob)
     user = getUserById(current_user_glob)
     if user is None:
         user = createUser(username)
     username = user['username']
     users = getUsersSortedByScore()
-    challenge = getLastChallenge()[0]
-    tool = getLastChallenge()[1]
 
-    return render_template('page.html', users=users, username=username, tool=tool, challenge=challenge)
+    id_challenge, challenge = getLastChallenge()
+    output = challenge["output"]
+    content = challenge["content"]
+
+    return render_template('page.html', users=users, username=username, tool=output, challenge=content)
 
 @app.route('/challenges')
 def challenges():
@@ -44,13 +47,16 @@ def challenges():
 
 @app.route('/upload_video', methods=['POST'])
 def upload_video():
+    global current_user_glob
+
+    print(current_user_glob)
     if request.method == 'POST':
+        user_id = current_user_glob
         
-        username = request.form['username']
         video_data = request.files['video']
 
         video_content = video_data.read()
-        video_url = addVideo(username, video_content)
+        addVideo(user_id, video_content)
 
         return "Video uploaded successfully!"
 
