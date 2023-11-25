@@ -9,19 +9,23 @@ ref_chall = db.reference("/challenges")
 
 # Données de l'utilisateur
 user_data = {
-    "id": 1,
-    "username": "nom_utilisateur",
+    "id": 2,
+    "username": "nom_utilisateur2",
     "challenges": ["challenge1", "challenge2"],
-    "score": 100
+    "score": 10,
+    "message": "t'es super naze"
 }
 
 chall_data = {
-    "id": 1,
-    "content": "blabla",
+    "id": 2,
+    "content": "blabla2",
     "output": "text",
     "userOutput": {
-        1: "output"
-    }
+        2: "output",
+        "user_id": "1"
+    },
+    "time start": "13:40",
+    "time end": "13:50"
 }
 
 # Ajout de l'utilisateur à la base de données
