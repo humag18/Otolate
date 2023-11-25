@@ -19,13 +19,13 @@
         <div class="grid grid-cols-5 gap-4">
             <ul class="text-sm p-2 col-span-4">
                 <h3>Username</h3>
-                {% for (user, score) in users %}
+                {% for (user, score, id) in users %}
                     <li>{{user}}</li>
                 {% endfor %}
             </ul>
             <ul class="col-span-1">
                 <h3>Score</h3>
-                {% for (user, score) in users %}
+                {% for (user, score, id) in users %}
                     <li>{{score}}</li>
                 {% endfor %}
             </ul>

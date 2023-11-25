@@ -35,7 +35,8 @@ def getUsers():
             if user_info:
                 name = user_info.get('username', '')
                 score = user_info.get('score', 0)
-                users.append((name, score))
+                id = user_info.get('id', 0)
+                users.append((name, score, id))
     else:
         print("Erreur : users_data n'est pas une liste")
     return users
@@ -62,9 +63,12 @@ def getUserById(id):
     return user_data
 
 
-def getUserByName(name):
-    user_data = ref_users.child(str(name)).get()
-    return user_data
+def getUserIdByName(name):
+    users = getUsers()
+    for user in users:
+        if user[0] == name:
+            return user[2]
+    return None
 
 
 def createUser(name):
@@ -77,6 +81,7 @@ def createUser(name):
         "message": ""
     }
     ref_users.child(str(id)).set(user_data)
+    print("User created !")
     return getUserById(id)
 
 
