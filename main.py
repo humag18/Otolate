@@ -27,7 +27,7 @@ ref_chall.child(str(chall_data["id"])).set(chall_data)
 
 def getUsers():
     users_data = ref_users.get()
-
+    print(users_data, type(users_data))
     if not users_data:
         return []
 
@@ -39,9 +39,17 @@ def getUsers():
                 score = user_info.get('score', 0)
                 id = user_info.get('id', 0)
                 users.append((name, score, id))
-            else:
-                print("Erreur : user_info est None pour un utilisateur")
+            # else:
+            #     print("Erreur : user_info est None pour un utilisateur")
     else:
+        for key, value in users_data.items():
+            if key:
+                name = value['username']
+                id = value['id']
+                score = value['score']
+                message = value['message']
+
+                users.append((name, score, id))
         print("Erreur : users_data n'est pas une liste")
     return users
 
@@ -93,7 +101,7 @@ def getChallengeWithIdWhereUserIs(challenge_id, user_id):
     if challenge_data:
         user_id_str = str(user_id * 10)
         user_output = challenge_data.get("userOutput", {}).get(user_id_str)
-        print("user " + str(user_id) + " for this challenge : ", user_output)
+        #print("user " + str(user_id) + " for this challenge : ", user_output)
         return user_output
     else:
         return None
@@ -123,5 +131,14 @@ def addVideo(id, video):
 
     ref_challenge = "/challenges/{}".format(id_challenge)
 
-    print(ref_challenge)
+    #print(ref_challenge)
+    db.reference(ref_challenge).child('userOutput').update(userOutputData)
+
+def addTexte(id, texte):
+    id *= 10
+    id_challenge, challenge = getLastChallenge()
+    userOutputData = challenge['userOutput']
+    userOutputData[id]= texte
+    ref_challenge = "/challenges/{}".format(id_challenge)
+    print("dedans")
     db.reference(ref_challenge).child('userOutput').update(userOutputData)
