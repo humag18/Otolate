@@ -73,7 +73,6 @@ def getUserById(id):
     user_data = ref_users.child(str(id)).get()
     return user_data
 
-
 def getUserIdByName(name):
     users = getUsers()
     for user in users:
@@ -113,6 +112,8 @@ def addVideo(id, video):
 
     userOutputData = challenge['userOutput']
 
+    print(userOutputData)
+
     blob = bucket.blob(f"{id}.webm")
     blob.upload_from_string(video, content_type='video/webm')
     video_url = blob.public_url
@@ -142,3 +143,10 @@ def addTexte(id, texte):
     ref_challenge = "/challenges/{}".format(id_challenge)
     print("dedans")
     db.reference(ref_challenge).child('userOutput').update(userOutputData)
+
+    print("done")
+
+if __name__ == "__main__":
+    print(image_url)
+
+
