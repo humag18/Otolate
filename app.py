@@ -2,7 +2,7 @@ import os
 from flask import Flask, render_template, redirect, request, url_for, session
 
 from main import (getUsersSortedByScore, getLastChallenge, getUserIdByName, getUserById, createUser,
-                  getChallengeWithIdWhereUserIs, addVideo)
+                  getChallengeWithIdWhereUserIs, addVideo, addTexte)
 
 app = Flask(__name__)
 app.secret_key = os.urandom(24)
