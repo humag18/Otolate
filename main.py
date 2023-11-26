@@ -1,5 +1,5 @@
 import firebase_admin
-from firebase_admin import credentials, db, storage
+from firebase_admin import credentials, db, storage, auth
 
 cred = credentials.Certificate("key.json")
 firebase_admin.initialize_app(cred,
@@ -109,15 +109,28 @@ def addVideo(id, video):
     blob.upload_from_string(video, content_type='video/webm')
     video_url = blob.public_url
 
-    userOutputData[id] = {"output": video_url, "type": "video"}
+    google_api = 'https://storage.googleapis.com/'
+    url = video_url.replace('https://storage.googleapis.com/', '')
+
+    urls = url.split('/')
+
+    back_url = urls[0]
+    front_url = urls[1]
+    
+    new_url = 'https://firebasestorage.googleapis.com/v0/b/' + back_url + "/o/" + front_url + "?alt=media"
+
+    userOutputData[id] = new_url
 
     ref_challenge = "/challenges/{}".format(id_challenge)
 
     print(ref_challenge)
     db.reference(ref_challenge).child('userOutput').update(userOutputData)
+<<<<<<< HEAD
 
     print("done")
 
 if __name__ == "__main__":
     print(image_url)
 
+=======
+>>>>>>> e0ffc94fefca7d30bd44fbd54bb4b5835545b7bb

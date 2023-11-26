@@ -16,6 +16,8 @@ This project was created for the purpose of a hackathon and is not intended for 
 To run the Otolate application locally, follow these steps:
 
 1. Clone the repository: `git clone https://github.com/your-username/otolate.git`
+2. Create a virtual environment: `python -m venv venv`
+3. Activate the virtual environment: `source venv/bin/activate`
 2. Install dependencies: `pip install -r requirements.txt`
 3. Set up Firebase credentials:
    - Create a Firebase project with the structure outlined in `firebase_structure.json`.
