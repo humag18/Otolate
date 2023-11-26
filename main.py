@@ -27,7 +27,6 @@ ref_chall.child(str(chall_data["id"])).set(chall_data)
 
 def getUsers():
     users_data = ref_users.get()
-    print(users_data, type(users_data))
     if not users_data:
         return []
 
@@ -112,8 +111,6 @@ def addVideo(id, video):
 
     userOutputData = challenge['userOutput']
 
-    print(userOutputData)
-
     blob = bucket.blob(f"{id}.webm")
     blob.upload_from_string(video, content_type='video/webm')
     video_url = blob.public_url
@@ -145,8 +142,3 @@ def addTexte(id, texte):
     db.reference(ref_challenge).child('userOutput').update(userOutputData)
 
     print("done")
-
-if __name__ == "__main__":
-    print(image_url)
-
-
