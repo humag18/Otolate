@@ -2,7 +2,7 @@ import os
 from flask import Flask, render_template, redirect, request, url_for
 
 from main import (getUsersSortedByScore, getLastChallenge, getUserIdByName, getUserById, createUser,
-                  getChallengeWithIdWhereUserIs, addVideo)
+                  getChallengeWithIdWhereUserIs, addVideo, addTexte)
 
 app = Flask(__name__)
 
@@ -25,7 +25,6 @@ def login():
 @app.route('/page/<username>')
 def page(username):
     global current_user_glob
-    print("page: ", current_user_glob)
     user = getUserById(current_user_glob)
     if user is None:
         user = createUser(username)
@@ -62,7 +61,6 @@ def challenges():
 def upload_video():
     global current_user_glob
 
-    print(current_user_glob)
     if request.method == 'POST':
         user_id = current_user_glob
         
@@ -72,6 +70,21 @@ def upload_video():
         addVideo(user_id, video_content)
 
         return "Video uploaded successfully!"
+    
+@app.route('/upload_texte', methods=['POST'])
+def upload_texte():
+    texte = request.form["submittedTexte"]
+    print(request.form["submittedTexte"])
+    global current_user_glob
+    user = getUserById(current_user_glob)
+    username = user['username']
+    users = getUsersSortedByScore()
+    id_challenge, challenge = getLastChallenge()
+    output = challenge["output"]
+    content = challenge["content"]
+    challenges = getAnswersFromChallenge(id_challenge)
+    addTexte(current_user_glob, texte)
+    return redirect(url_for('challenges', users = users, challenge = content, challenges = challenges, tool = output, username = username))
 
 if __name__ == '__main__':
     app.run(debug=True)

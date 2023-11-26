@@ -47,7 +47,7 @@
                 {% endif %}
             </div>
             <!-- Form -->
-            <form action="" class="flex flex-col items-center justify-center mb-4">
+            <form action="/upload_texte" method="post" class="flex flex-col items-center justify-center mb-4">
                 <!-- Tools -->
                 <div id="tools" class="mb-4">
                     {% if tool == "camera" %}
@@ -69,7 +69,7 @@
                             </div>
                         </div>
                     {% elif tool == "text" %}
-                        <input type="text" name="" id="" class="border rounded py-2 px-4">
+                        <input type="text" name="submittedTexte" id="" class="border rounded py-2 px-4">
                     {% elif tool == "file" %}
                         <input type="file" name="" id="" class="border rounded py-2 px-4">
                     {% else %}
