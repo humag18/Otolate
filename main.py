@@ -1,5 +1,5 @@
 import firebase_admin
-from firebase_admin import credentials, db, storage
+from firebase_admin import credentials, db, storage, auth
 
 cred = credentials.Certificate("key.json")
 firebase_admin.initialize_app(cred,
@@ -10,15 +10,6 @@ bucket = storage.bucket()
 
 ref_users = db.reference("/users")
 ref_chall = db.reference("/challenges")
-
-# Données de l'utilisateur
-user_data = {
-    "id": 4,
-    "username": "mael",
-    "challenges": ["challenge1", "challenge2"],
-    "score": 0,
-    "message": "t'es super naze"
-}
 
 chall_data = {
     "id": 1002,
@@ -31,9 +22,6 @@ chall_data = {
     "time start": "13:40",
     "time end": "13:50"
 }
-
-# Ajout de l'utilisateur à la base de données
-ref_users.child(str(user_data["id"])).set(user_data)
 ref_chall.child(str(chall_data["id"])).set(chall_data)
 
 
@@ -51,6 +39,8 @@ def getUsers():
                 score = user_info.get('score', 0)
                 id = user_info.get('id', 0)
                 users.append((name, score, id))
+            else:
+                print("Erreur : user_info est None pour un utilisateur")
     else:
         print("Erreur : users_data n'est pas une liste")
     return users
@@ -119,7 +109,17 @@ def addVideo(id, video):
     blob.upload_from_string(video, content_type='video/webm')
     video_url = blob.public_url
 
-    userOutputData[id] = {"output": video_url, "type": "video"}
+    google_api = 'https://storage.googleapis.com/'
+    url = video_url.replace('https://storage.googleapis.com/', '')
+
+    urls = url.split('/')
+
+    back_url = urls[0]
+    front_url = urls[1]
+    
+    new_url = 'https://storage.googleapis.com/v0/b/' + back_url + "/o/" + front_url + "?alt=media"
+
+    userOutputData[id] = new_url
 
     ref_challenge = "/challenges/{}".format(id_challenge)
 
