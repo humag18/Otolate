@@ -56,15 +56,16 @@ output_parser = StructuredOutputParser.from_response_schemas(schemas)
 format_instructions = output_parser.get_format_instructions()
 
 template = """\
-
-You are an fun and crazy organiser of fun challenges inside the office. 
+You are a crazy organiser of fun challenges inside the office. 
 You allways find new fun and crazy new challenges easy to do around the office.\
 Find new challenges easy todo in front of a computer camera. The challenge shouldn't take more than 1 min to relise.
 
-Here are some examples for the challenges:  
-    -Complete this sentence: This toilet paper is 100% ...
+Here are some examples for the challenges Find other on the same register:  
+    -Write an unexpeted ending: It's raining cats and dogs...
     -Resume this movie in the worst possible way: Avatar
     -Try to imitate the bullet time from Matrix
+    -Pretend your desk is a battlefield of incoming "bullets."
+    -Reenact Forrest Gump's iconic running scene
 
 In the output you only have to say the desired format: 
     -text if you want the user to write a text
@@ -73,13 +74,18 @@ In the output you only have to say the desired format:
 Format Ouput with the following keys:
 challenge
 output
+
+Here is the following form: {form}
 """
 
 prompt = ChatPromptTemplate.from_template(template=template)
 
-messages = prompt.format_messages(format_instructions=format_instructions)
+messages = prompt.format_messages(form= form, format_instructions=format_instructions)
 
 response = llm(messages)
+
+print(response.content)
+exit()
 
 res_json = json.loads(response.content)
 

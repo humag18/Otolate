@@ -6,7 +6,7 @@ from main import (getUsersSortedByScore, getLastChallenge, getUserIdByName, getU
 
 app = Flask(__name__)
 
-current_user_glob = 0
+current_user_glob = 2
 
 @app.route('/')
 def home():
@@ -18,6 +18,7 @@ def login():
     # current username of the connected user
     global current_user_glob
     current_user_glob = getUserIdByName(request.form['username'])
+    print(current_user_glob)
     return redirect(url_for('page', username=request.form['username']))
 
 
@@ -41,23 +42,21 @@ def page(username):
 def challenges():
     global current_user_glob
     user = getUserById(current_user_glob)
+    print(user)
     username = user['username']
     users = getUsersSortedByScore()
     id_challenge, challenge = getLastChallenge()
+    
     output = challenge["output"]
     content = challenge["content"]
-    challenges = getAnswersFromChallenge(id_challenge)
-    return render_template('challenges.html', users = users, challenge = content, challenges = challenges, tool = output, username = username)
+    userOuput = challenge["userOutput"]
 
-def getAnswersFromChallenge(challenge_id):
-    users = getUsersSortedByScore()
     answers = []
-    for user in users:
-        username = user[0]
-        url = getChallengeWithIdWhereUserIs(challenge_id, user[2])
-        answer = (username, url)
-        answers.append(answer)
-    return answers
+    for k,v in challenge["userOutput"].items(): 
+        username = getUserById(str(int(k) // 10))["username"]
+        answers.append((username,userOuput[k]))
+
+    return render_template('challenges.html', users = users, challenge = content, challenges = answers, tool = output, username = username)
 
 @app.route('/upload_video', methods=['POST'])
 def upload_video():
