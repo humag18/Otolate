@@ -1,8 +1,8 @@
-import os
+import os, datetime
 from flask import Flask, render_template, redirect, request, url_for, session
 
 from main import (getUsersSortedByScore, getLastChallenge, getUserIdByName, getUserById, createUser,
-                  getChallengeWithIdWhereUserIs, addVideo, addTexte)
+                  getChallengeWithIdWhereUserIs, addVideo, addTexte, addPointToUser, calculRemainingTime, getUsers,substractPointToUser)
 
 app = Flask(__name__)
 app.secret_key = os.urandom(24)
@@ -34,16 +34,18 @@ def page(username):
     output = challenge["output"]
     content = challenge["content"]
 
-    return render_template('page.html', users=users, username=username, tool=output, challenge=content)
+    timeStop = challenge["time_stop"]
+    remainingTime = calculRemainingTime(timeStop)
 
-@app.route('/challenges')
-def challenges():
-    user = getUserById(session['current_user_id'])
+    return render_template('page.html', users=users, username=username, tool=output, challenge=content, time = remainingTime)
 
-    username = user['username']
+@app.route('/challenges/<username>')
+def challenges(username):
+
+    username = username
     users = getUsersSortedByScore()
     id_challenge, challenge = getLastChallenge() # ok 
-    
+
     output = challenge["output"]
     content = challenge["content"]
     userOuput = challenge["userOutput"]
@@ -58,15 +60,18 @@ def challenges():
 
     return render_template('challenges.html', users = users, challenge = content, challenges = answers, tool = output, username = username)
 
-@app.route('/upload_video', methods=['POST'])
-def upload_video():
+@app.route('/upload_video/<username>', methods=['POST'])
+def upload_video(username):
     if request.method == 'POST':
-        user_id = session['current_user_id']
+        user_id = getUserIdByName(username)
         
         video_data = request.files['video']
 
         video_content = video_data.read()
         addVideo(user_id, video_content)
+
+        user_id = getUserIdByName(username)
+        addPointToUser(user_id)
 
         return "Video uploaded successfully!"
     
@@ -83,12 +88,24 @@ def upload_texte(username):
     content = challenge["content"]
     userOuput = challenge["userOutput"]
 
+    user_id = getUserIdByName(username)
+    addPointToUser(user_id)
+
     answers = []
     for k,v in challenge["userOutput"].items(): 
-        username = getUserById(str(int(k) // 10))["username"]
-        answers.append((username,userOuput[k]))
+        usernameCurrent = getUserById(str(int(k) // 10))["username"]
+        answers.append((usernameCurrent,userOuput[k]))
     addTexte(current_user_glob, texte)
     return redirect(url_for('challenges', users = users, challenge = content, challenges = answers, tool = output, username = username))
+
+@app.route('/timer')
+def timer():
+    users = getUsers()
+    for user in users:
+        user_id = user[2]
+        substractPointToUser(user_id)
+    return "Bonne nuit Kameron"
+
 
 if __name__ == '__main__':
     app.run(debug=True)

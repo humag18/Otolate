@@ -46,6 +46,10 @@
                     <p class="text-center">No challenge avaible for now</p>
                 {% endif %}
             </div>
+            <!-- Timer -->
+            <div id="timer" class="text-2xl">
+                00:00
+            </div>
             <!-- Form -->
             <form action="/upload_texte/{{username}}" method="post" class="flex flex-col items-center justify-center mb-4">
                 <!-- Tools -->
@@ -101,6 +105,31 @@
             <button id="closeButton" class="mt-4 bg-gray-500 text-white py-2 px-4 rounded">Close</button>
         </div>
     </div>
+
+    <script>
+        let body = document.getElementsByTagName("body")[0]
+        body.addEventListener("load", startTimer("{{time}}"))
+
+        function startTimer(durationInSeconds) {
+          console.log(durationInSeconds)
+          let timer = durationInSeconds;
+          const timerElement = document.getElementById('timer');
+        
+          const countdown = setInterval(function () {
+            const minutes = Math.floor(timer / 60);
+            const seconds = timer % 60;
+        
+            timerElement.textContent = `${String(minutes).padStart(2, '0')}:${String(seconds).padStart(2, '0')}`;
+        
+            if (--timer < 0) {
+              clearInterval(countdown);
+              timerElement.textContent = 'Time Expired!';
+              fetch('/timer')
+            }
+          }, 1000);
+        }
+        
+    </script>
 
     <script>
         const profileButton = document.getElementById('profileButton');
@@ -285,7 +314,7 @@
             formData.append('video', recordedBlob, 'recorded_video.webm');
             formData.append('username', 'replace_with_username'); // replace_with_username with the actual username
 
-            const response = await fetch('/upload_video', {
+            const response = await fetch('/upload_video/{{username}}', {
                 method: 'POST',
                 body: formData,
             });

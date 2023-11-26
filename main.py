@@ -1,4 +1,4 @@
-import firebase_admin
+import firebase_admin, datetime
 from firebase_admin import credentials, db, storage, auth
 
 cred = credentials.Certificate("key.json")
@@ -75,8 +75,8 @@ def getUserById(id):
 def getUserIdByName(name):
     users = getUsers()
     for user in users:
-        if user["username"] == name:
-            return user["id"]
+        if user[0] == name:
+            return user[2]
     return None
 
 
@@ -142,3 +142,31 @@ def addTexte(id, texte):
     db.reference(ref_challenge).child('userOutput').update(userOutputData)
 
     print("done")
+
+def addPointToUser(id) :
+    ref_user = "/users/{}".format(id)
+    user_data = ref_users.child(str(id)).get()
+ 
+    user_data['score'] += 10
+
+    db.reference(ref_user).update(user_data)
+
+def substractPointToUser(id):
+    ref_user = "/users/{}".format(id)
+    user_data = ref_users.child(str(id)).get()
+ 
+    user_data['score'] -= 5
+
+    db.reference(ref_user).update(user_data)
+
+def calculRemainingTime(timeStop):
+    end_time = datetime.datetime.strptime(timeStop, "%H:%M")
+
+    current_time = datetime.datetime.now()
+    formatted_current_time = current_time.strftime("%H:%M")
+    current_time = datetime.datetime.strptime(formatted_current_time, "%H:%M")
+
+    time_difference = end_time - current_time #en secondes
+
+    return time_difference.total_seconds()
+    
