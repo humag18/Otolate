@@ -28,7 +28,7 @@ from firebase_admin import credentials, db
 
 load_dotenv()
 
-openai.api_key = os.environ['OPENAI_API_KEY']
+openai.api_key = os.environ["OPENAI_API_KEY"]
 
 cred = credentials.Certificate("key.json")
 firebase_admin.initialize_app(cred, {"databaseURL": "https://otolate-bcc65-default-rtdb.europe-west1.firebasedatabase.app/"})
@@ -97,5 +97,5 @@ chall_data = {
 
 ref_chall.child(str(chall_data["id"])).set(chall_data)
 
-print("Utilisateur ajouté avec succès!")
+print("challenge créer avec succès!")
 

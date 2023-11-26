@@ -1,5 +1,5 @@
 import os
-
+from dotenv import load_dotenv
 import json
 import textwrap
 
@@ -25,16 +25,15 @@ from langchain.output_parsers import StructuredOutputParser
 import firebase_admin
 from firebase_admin import credentials, db
 
-openai.api_key = "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"
+load_dotenv()
 
-cred = credentials.Certificate("key.json")
-firebase_admin.initialize_app(cred, {"databaseURL": "https://otolate-bcc65-default-rtdb.europe-west1.firebasedatabase.app/"})
+openai.api_key = os.environ["OPENAI_API_KEY"]
 
-userid = getUserIdByName("cameron")
-user = getUserById(userid)
+"""userid = getUserIdByName("louisa")"""
+user = getUserById(2)
 score = user['score']
 previous = user['previous_score']
-
+print(score, previous)
 if score<previous:
     form = 0
 else:
@@ -44,7 +43,7 @@ llm_model = "gpt-3.5-turbo"
 llm = ChatOpenAI(temperature=0.7, model=llm_model)
 response = ResponseSchema(
     name="message",
-    description="message depend of the score"
+    description="good or bad message"
     )
 
 schemas = [response]
@@ -54,33 +53,14 @@ format_instructions = output_parser.get_format_instructions()
 
 template = """\
 
-You are a funny game master in a society. You must find a message thats fits in one or two sentences depending on which score is higher or lower than the previously score.
-
--If the {form} = 0 find a little sentences tell to the worker he is vired be trash and don't forget to tell him he's a real looser
+You are a cray and fun organiser of fun challenges inside the office.
+you receive a daily score of all participants.
+Find a fun and trash sentence for différents case: If the {form} = 0 find a little sentences  to tell to your worker he is fired be trash and don't forget to tell him he's a real looser. If the {form} = 1 find a joke/meme to encourage your worker to continue like this!
 
 """
 
 prompt = ChatPromptTemplate.from_template(template=template)
 
 messages = prompt.format_messages(form = form, format_instructions=format_instructions)
-
 response = llm(messages)
-
-res_json = json.loads(response.content)
-
-# envoi à la db 
-ref_chall = db.reference("/challenges")
-
-chall_data = {
-    "id": 6,
-    "content": res_json["challenge"],
-    "output": res_json["output"],
-    "userOutput": [],
-    "time_start": "2023-11-10T12:00:00+01:00",
-    "time_stop": "2023-11-15T18:00:00+01:00",
-}
-
-ref_chall.child(str(chall_data["id"])).set(chall_data)
-
-print("Utilisateur ajouté avec succès!")
-
+print(response.content)
