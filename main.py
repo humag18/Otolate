@@ -44,7 +44,7 @@ def getUsers():
         for key, value in users_data.items():
             if key:
                 name = value['username']
-                id = value['id']
+                id = int(value['id'])
                 score = value['score']
                 message = value['message']
 
@@ -52,6 +52,15 @@ def getUsers():
         print("Erreur : users_data n'est pas une liste")
     return users
 
+def getUserMessage(username):
+    user_id = getUserIdByName(username)
+    users_data = ref_users.get()
+    print(users_data)
+    if not users_data:
+        return []
+    for key,value in users_data.items() :
+        if int(key) == user_id:
+            return value['message']
 
 def getUsersSortedByScore():
     users = getUsers()
