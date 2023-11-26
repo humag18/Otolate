@@ -27,7 +27,7 @@ ref_chall.child(str(chall_data["id"])).set(chall_data)
 
 def getUsers():
     users_data = ref_users.get()
-    print(users_data, type(users_data))
+    #print(users_data, type(users_data))
     if not users_data:
         return []
 

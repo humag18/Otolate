@@ -30,7 +30,7 @@
                 {% endfor %}
             </ul>
         </div>
-        <button onclick="(() => {window.location.href = '/challenges'})()" class="buttonAnim w-[80%] p-4 border border-black rounded ml-[10%] mt-auto mb-10">See submitted challenges!</button>
+        <button onclick="(() => {window.location.href = '/challenges/{{username}}'})()" class="buttonAnim w-[80%] p-4 border border-black rounded ml-[10%] mt-auto mb-10">See submitted challenges!</button>
     </div>
 
     <!-- To see the current challenge -->
@@ -47,7 +47,7 @@
                 {% endif %}
             </div>
             <!-- Form -->
-            <form action="/upload_texte" method="post" class="flex flex-col items-center justify-center mb-4">
+            <form action="/upload_texte/{{username}}" method="post" class="flex flex-col items-center justify-center mb-4">
                 <!-- Tools -->
                 <div id="tools" class="mb-4">
                     {% if tool == "camera" %}
