@@ -57,7 +57,7 @@ schemas = [FirstName, LastName]
 output_parser = StructuredOutputParser.from_response_schemas(schemas)
 format_instructions = output_parser.get_format_instructions()
 
-coin = random.randint(0,1)
+coin = 1
 
 print(coin)
 
