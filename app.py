@@ -1,12 +1,11 @@
 import os
-from flask import Flask, render_template, redirect, request, url_for
+from flask import Flask, render_template, redirect, request, url_for, session
 
 from main import (getUsersSortedByScore, getLastChallenge, getUserIdByName, getUserById, createUser,
-                  getChallengeWithIdWhereUserIs, addVideo, addTexte)
+                  getChallengeWithIdWhereUserIs, addVideo)
 
 app = Flask(__name__)
-
-current_user_glob = 2
+app.secret_key = os.urandom(24)
 
 @app.route('/')
 def home():
@@ -16,19 +15,19 @@ def home():
 @app.route('/createUsername', methods=['POST'])
 def login():
     # current username of the connected user
-    global current_user_glob
-    current_user_glob = getUserIdByName(request.form['username'])
-    #print(current_user_glob)
+ 
+    user_id = getUserIdByName(request.form['username'])
+    
+    session['current_user_id'] = user_id
     return redirect(url_for('page', username=request.form['username']))
 
 
 @app.route('/page/<username>')
 def page(username):
-    #global current_user_glob
-    # user = getUserById(current_user_glob)
-    # if user is None:
-    #     user = createUser(username)
-    # username = user['username']
+    user = getUserById(session['current_user_id'])
+    if user is None:
+        user = createUser(username)
+    username = user['username']
     users = getUsersSortedByScore()
 
     id_challenge, challenge = getLastChallenge()
@@ -37,14 +36,13 @@ def page(username):
 
     return render_template('page.html', users=users, username=username, tool=output, challenge=content)
 
-@app.route('/challenges/<username>')
-def challenges(username):
-    # global current_user_glob
-    # user = getUserById(current_user_glob)
-    # print(user)
-    # username = user['username']
+@app.route('/challenges')
+def challenges():
+    user = getUserById(session['current_user_id'])
+
+    username = user['username']
     users = getUsersSortedByScore()
-    id_challenge, challenge = getLastChallenge()
+    id_challenge, challenge = getLastChallenge() # ok 
     
     output = challenge["output"]
     content = challenge["content"]
@@ -52,18 +50,18 @@ def challenges(username):
     print(challenge)
     answers = []
     for k,v in challenge["userOutput"].items(): 
-        print(k, end="\n")
-        username = getUserById(str(int(k) // 10))["username"]
-        answers.append((username,userOuput[k]))
+        try: 
+            username = getUserById(str(int(k) // 10))["username"]
+            answers.append((username,userOuput[k]))
+        except: 
+            continue
 
     return render_template('challenges.html', users = users, challenge = content, challenges = answers, tool = output, username = username)
 
 @app.route('/upload_video', methods=['POST'])
 def upload_video():
-    global current_user_glob
-
     if request.method == 'POST':
-        user_id = current_user_glob
+        user_id = session['current_user_id']
         
         video_data = request.files['video']
 

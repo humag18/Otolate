@@ -2,3 +2,4 @@ env/
 venv/
 .env 
 key.json
+__pycache__/main.cpython-311.pyc

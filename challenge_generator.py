@@ -1,4 +1,5 @@
 import os
+import random
 
 from dotenv import load_dotenv
 
@@ -55,6 +56,10 @@ schemas = [FirstName, LastName]
 output_parser = StructuredOutputParser.from_response_schemas(schemas)
 format_instructions = output_parser.get_format_instructions()
 
+coin = random.randint(0,5)
+
+print(coin)
+
 template = """\
 You are a crazy organiser of fun challenges inside the office. 
 You allways find new fun and crazy new challenges easy to do around the office.\
@@ -62,13 +67,21 @@ Find new challenges easy todo in front of a computer camera. The challenge shoul
 
 Here are some examples for the challenges Find other on the same register:  
     -Write an unexpeted ending: It's raining cats and dogs...
-    -Resume this movie in the worst possible way: Avatar
+    -Say merry christmas the best possible way. 
     -Try to imitate the bullet time from Matrix
     -Pretend your desk is a battlefield of incoming "bullets."
-    -Reenact Forrest Gump's iconic running scene
+    -do the spiderman pose. 
+    -sing all I want for chirstmas is you.
+    -Reenact Forrest Gump's iconic running scene.
+
+Do not ask: 
+    -to write poems or texts. 
+    -to write about an image or a caption.
+    -to write dialogs
+    
 
 In the output you only have to say the desired format: 
-    -text if you want the user to write a text
+    -text if you want the user to write a very short text
     -video if the user has to make a video
 
 Format Ouput with the following keys:
@@ -76,16 +89,20 @@ challenge
 output
 
 Here is the following form: {form}
+
+To choose what king of challenges you are going to flip a coin if it is 2,3,4,5 you ask for a text challenge 
+If 0,1 ask for a video.
+
+coin value: {coin}
 """
 
 prompt = ChatPromptTemplate.from_template(template=template)
 
-messages = prompt.format_messages(form= form, format_instructions=format_instructions)
+messages = prompt.format_messages(form= form, coin=coin, format_instructions=format_instructions)
 
 response = llm(messages)
 
 print(response.content)
-exit()
 
 res_json = json.loads(response.content)
 
