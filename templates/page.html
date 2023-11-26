@@ -16,7 +16,7 @@
     <!-- Leaderboard -->
     <div id="leaderboard" class=" w-1/5 bg-gray-300 overflow-scroll flex flex-col">
         <h2 class="text-2xl font-bold flex justify-center mb-5 mt-5">Leaderboard 🏆</h2>
-        <div class="grid grid-cols-5 gap-4">
+        <div class="grid grid-cols-5 gap-4 overflow-scroll">
             <ul class="col-span-3 ml-2">
                 <h3 class="mb-5">Username</h3>
                 {% for (user, score, id) in users %}
@@ -35,7 +35,7 @@
 
     <!-- To see the current challenge -->
     <!-- Vertical Alignment Container -->
-    <div class="flex flex-col justify-center w-4/5" style="background:url(/static/theOffice.jpg) no-repeat center center fixed;">
+    <div class="flex flex-col justify-center w-4/5" style="background:url(/static/theOffice.jpg) no-repeat 70% 50%;">
         <div class="flex flex-col justify-center items-center w-[50%] ml-[10%] max-h-[60vh]">
             <!-- Challenge -->
             <div id="challenge" class="my-4 border-black border rounded p-4 w-fit">

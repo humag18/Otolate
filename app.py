@@ -43,10 +43,11 @@ def challenges():
     user = getUserById(current_user_glob)
     username = user['username']
     users = getUsersSortedByScore()
-    challenge = getLastChallenge()[0]
-    tool = getLastChallenge()[1]
-    #currentUser = request.args.get('username', default=None)
-    return render_template('challenges.html', users = users, challenge = challenge, challenges = [("Michel","mdr"), ("Pat","lol"), ("Flav","etc")], tool = tool, username = username)
+    id_challenge, challenge = getLastChallenge()
+    output = challenge["output"]
+    content = challenge["content"]
+    challenges = getAnswersFromChallenge(id_challenge)
+    return render_template('challenges.html', users = users, challenge = content, challenges = challenges, tool = output, username = username)
 
 def getAnswersFromChallenge(challenge_id):
     users = getUsersSortedByScore()

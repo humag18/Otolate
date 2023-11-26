@@ -125,9 +125,3 @@ def addVideo(id, video):
 
     print(ref_challenge)
     db.reference(ref_challenge).child('userOutput').update(userOutputData)
-
-    print("done")
-
-
-if __name__ == "__main__":
-    print(image_url)
