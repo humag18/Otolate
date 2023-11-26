@@ -7,68 +7,77 @@
     <title>Home Page</title>
 </head>
 <body class="h-screen flex">
-    {% if username == None %}
-        <script>
-            window.location.href = "../"
-        </script>
-    {%endif%}
+{% if username == None %}
+    <script>
+        window.location.href = "../"
+    </script>
+{% endif %}
 
-    <!-- Leaderboard -->
-    <div id="leaderboard" class=" w-1/5 bg-gray-300 overflow-scroll flex flex-col">
-        <h2 class="text-2xl font-bold flex justify-center mb-5 mt-5">Leaderboard 🏆</h2>
-        <div class="grid grid-cols-5 gap-4 overflow-scroll">
-            <ul class="col-span-3 ml-2">
-                <h3 class="mb-5">Username</h3>
-                {% for (user, score, id) in users %}
-                    <li>{{user}}</li>
-                {% endfor %}
-            </ul>
-            <ul class="col-span-2">
-                <h3 class="mb-5">Score ⭐</h3>
-                {% for (user, score, id) in users %}
-                    <li class="text-center">{{score}}</li>
-                {% endfor %}
-            </ul>
-        </div>
-        <button onclick="(() => {window.location.href = '/challenges/{{username}}'})()" class="buttonAnim w-[80%] p-4 border border-black rounded ml-[10%] mt-auto mb-10 bg-gray-400">See submitted challenges!</button>
+<!-- Leaderboard -->
+<div id="leaderboard" class=" w-1/5 bg-gray-300 overflow-scroll flex flex-col">
+    <h2 class="text-2xl font-bold flex justify-center mb-5 mt-5">Leaderboard 🏆</h2>
+    <div class="grid grid-cols-5 gap-4 overflow-scroll">
+        <ul class="col-span-3 ml-2">
+            <h3 class="mb-5">Username</h3>
+            {% for (user, score, id) in users %}
+                <li>{{ user }}</li>
+            {% endfor %}
+        </ul>
+        <ul class="col-span-2">
+            <h3 class="mb-5">Score ⭐</h3>
+            {% for (user, score, id) in users %}
+                <li class="text-center">{{ score }}</li>
+            {% endfor %}
+        </ul>
     </div>
+    <button onclick="(() => {window.location.href = '/challenges/{{ username }}'})()"
+            class="buttonAnim w-[80%] p-4 border border-black rounded ml-[10%] mt-auto mb-10">See submitted challenges!
+    </button>
+</div>
 
-    <!-- To see the current challenge -->
-    <!-- Vertical Alignment Container -->
-    <div class="flex flex-col justify-center w-4/5" style="background:url(/static/theOffice.jpg) no-repeat 70% 50%;">
-        <div class="flex flex-col justify-center items-center w-[50%] ml-[10%] max-h-[60vh]">
-            <!-- Challenge -->
-            <div id="challenge" class="my-4 border-black border rounded p-4 w-fit">
-                <p class="text-center text-2xl">The challenge is :</p>
-                {% if challenge != None %}
-                    <p class="text-center">{{ challenge }}</p>
-                {% else %}
-                    <p class="text-center">No challenge avaible for now</p>
-                {% endif %}
-            </div>
-            <!-- Timer -->
-            <div id="timer" class="text-2xl">
-                00:00
-            </div>
-            <!-- Form -->
-            <form action="/upload_texte/{{username}}" method="post" class="flex flex-col items-center justify-center mb-4">
+<!-- To see the current challenge -->
+<!-- Vertical Alignment Container -->
+<div class="flex flex-col justify-center w-4/5" style="background:url(/static/theOffice.jpg) no-repeat 70% 50%;">
+    <div class="flex flex-col justify-center items-center w-[50%] ml-[10%] max-h-[60vh]">
+        <!-- Challenge -->
+        <div id="challenge" class="my-4 border-black border rounded p-4 w-fit">
+            <p class="text-center text-2xl">The challenge is :</p>
+            {% if challenge != None %}
+                <p class="text-center">{{ challenge }}</p>
+            {% else %}
+                <p class="text-center">No challenge avaible for now</p>
+            {% endif %}
+        </div>
+        <!-- Timer -->
+        <div id="timer" class="text-2xl">
+            00:00
+        </div>
+        <!-- Form -->
+        {% if time > 0 %}
+            <form id="myForm" action="/upload_texte/{{ username }}" method="post"
+                  class="flex flex-col items-center justify-center mb-4">
                 <!-- Tools -->
                 <div id="tools" class="mb-4">
                     {% if tool == "camera" %}
-                        
+
                         <div class="flex-wrap flex-col justify-center items-center w-">
                             <div class="camera flex flex-col justify-center items-center relative">
-                                <div id="redDot" class="animate-ping bg-red-600 rounded-full w-5 h-5 absolute top-0 right-0 m-2 hidden"></div>
+                                <div id="redDot"
+                                     class="animate-ping bg-red-600 rounded-full w-5 h-5 absolute top-0 right-0 m-2 hidden"></div>
                                 <video id="liveVideo">Le flux vidéo n'est pas disponible.</video>
                                 <div class="w-full flex justify-around my-5">
-                                    <button type="button" id="startButton" class="px-4 py-4 border border-black rounded">Start Capture</button>
-                                    <button type="button" id="stopButton" disabled class="px-4 py-4 border border-black rounded">Stop Capture</button>
+                                    <button type="button" id="startButton"
+                                            class="px-4 py-4 border border-black rounded">
+                                        Start Capture
+                                    </button>
+                                    <button type="button" id="stopButton" disabled
+                                            class="px-4 py-4 border border-black rounded">Stop Capture
+                                    </button>
                                 </div>
-                                <button id="photobutton" class="px-4 py-4 border border-black rounded my-5">Prendre une photo</button>
                             </div>
                             <canvas id="canvas" class="hidden"></canvas>
                             <div class="output flex flex-col justify-center">
-                                <img id="photo" class="hidden" alt="L'image capturée apparaîtra ici." />
+                                <img id="photo" class="hidden" alt="L'image capturée apparaîtra ici."/>
                                 <video id="outputVideo" class="hidden w-[80%]" style="height: calc(80%/(4/3));"></video>
                             </div>
                         </div>
@@ -81,275 +90,293 @@
                     {% endif %}
                 </div>
                 <!-- Submit Button -->
-                {% if tool != None and username != None and tool != "camera" %}
-                    <button type="submit" class="buttonAnim py-2 px-4 bg-white border border-black rounded">Submit</button>
+                {% if tool != None and username != None and tool != "camera" and time > 0 %}
+                    <button type="submit" id="submitBtn" {% if disable_submit %}disabled{% endif %}
+                            style="{% if disable_submit %}display: none;{% endif %}"
+                            class="buttonAnim py-2 px-4 bg-white border border-black rounded">
+                        Submit
+                    </button>
                 {% endif %}
             </form>
-        </div>
+        {% endif %}
     </div>
+</div>
+<!-- Profile -->
+<div id="profileButton" class="absolute -top-[120px] -right-[120px] cursor-pointer w-60 h-60 rounded-full bg-white">
+    <img src="../static/userIcon.png" alt="" class="w-12 h-12 rounded-full absolute bottom-[50px] left-[50px]">
+</div>
 
-    <!-- Profile -->
-    <div id="profileButton" class="absolute -top-[120px] -right-[120px] cursor-pointer w-60 h-60 rounded-full bg-white">
-        <img src="../static/userIcon.png" alt="" class="w-12 h-12 rounded-full absolute bottom-[50px] left-[50px]">
+<!-- Slide-Over content -->
+<div id="slideOver"
+     class="fixed right-0 top-0 h-full w-[25%] bg-white shadow-lg transform translate-x-full transition-transform ease-in-out duration-300">
+    <!-- Your slide-over content goes here -->
+    <div class="p-4">
+
+        <p class="text-3xl">You are connected as :</p>
+        <h2 class="font-bold mb-[10%] text-2xl">{{ username }}</h2>
+
+        <h2 class="text-3xl mb-5">*Message received 📧* : </h2>
+
+        <h2 class="text-2xl mb-5">"{{ message }}"</h2>
+        <audio src="/static/message.mp3" controls></audio>
+
+        <!-- Close button -->
+        <button id="closeButton" class="mt-4 bg-gray-500 text-white py-2 px-4 rounded">Close</button>
     </div>
+</div>
 
-    <!-- Slide-Over content -->
-    <div id="slideOver" class="fixed right-0 top-0 h-full w-[25%] bg-white shadow-lg transform translate-x-full transition-transform ease-in-out duration-300">
-        <!-- Your slide-over content goes here -->
-        <div class="p-4">
-            
-            <p class="text-3xl">You are connected as :</p>
-            <h2 class="font-bold mb-[10%] text-2xl">{{ username }}</h2>
+<script>
+    let body = document.getElementsByTagName("body")[0]
+    body.addEventListener("load", startTimer("{{time}}"))
 
-            <h2 class="text-3xl mb-5">*Message received 📧* : </h2>
+    function startTimer(durationInSeconds) {
+        console.log(durationInSeconds)
+        let timer = durationInSeconds;
+        const timerElement = document.getElementById('timer');
+        const submitBtn = document.getElementById('submitBtn');
+        const myForm = document.getElementById('myForm');
 
-            <h2 class="text-2xl mb-5">"{{message}}"</h2>
-            <audio src="/static/message.mp3" controls></audio>
-
-            <!-- Close button -->
-            <button id="closeButton" class="mt-4 bg-gray-500 text-white py-2 px-4 rounded">Close</button>
-        </div>
-    </div>
-
-    <script>
-        let body = document.getElementsByTagName("body")[0]
-        body.addEventListener("load", startTimer("{{time}}"))
-
-        function startTimer(durationInSeconds) {
-          console.log(durationInSeconds)
-          let timer = durationInSeconds;
-          const timerElement = document.getElementById('timer');
-        
-          const countdown = setInterval(function () {
+        const countdown = setInterval(function () {
             const minutes = Math.floor(timer / 60);
             const seconds = timer % 60;
-        
+
             timerElement.textContent = `${String(minutes).padStart(2, '0')}:${String(seconds).padStart(2, '0')}`;
-        
+
             if (--timer < 0) {
-              clearInterval(countdown);
-              timerElement.textContent = 'Time Expired!';
-              fetch('/timer/{{username}}')
-            }
-          }, 1000);
-        }
-        
-    </script>
-
-    <script>
-        const profileButton = document.getElementById('profileButton');
-        const slideOver = document.getElementById('slideOver');
-        const closeButton = document.getElementById('closeButton');
-
-        profileButton.addEventListener('click', () => {
-            slideOver.classList.remove('translate-x-full');
-        });
-
-        closeButton.addEventListener('click', () => {
-            slideOver.classList.add('translate-x-full');
-        });
-
-        function verifUsername(){
-
-        }
-    </script>
-
-    <script>
-        (() => {
-  
-  const width = 320; // On met à l'échelle la photo pour avoir cette largeur
-  let height = 0; // On calcule cette valeur ensuite selon le flux d'entrée
-
-  // |streaming| indique si le flux vidéo est en cours
-  let streaming = false;
-  let canvas = null;
-  let photo = null;
-  let photobutton = null;
-  let stream;
-  let mediaRecorder;
-  let recordedChunks = [];
-  const startButton = document.getElementById('startButton');
-  const stopButton = document.getElementById('stopButton');
-  const outputVideo = document.getElementById("outputVideo");
-  const liveVideo = document.getElementById("liveVideo");
-  const redDot = document.getElementById('redDot');
-  startButton.addEventListener('click', startRecording);
-  stopButton.addEventListener('click', stopRecording);  
-
-  function launchLiveVideo(){
-    navigator.mediaDevices
-      .getUserMedia({ video: true})
-      .then((stream) => {
-        liveVideo.srcObject = stream;
-        liveVideo.play();
-        return stream
-      })
-      .catch((err) => {
-        console.error(`Une erreur est survenue : ${err}`);
-      });
-  }
-
-  function startup() {
-    
-    canvas = document.getElementById("canvas");
-    photo = document.getElementById("photo");
-    photobutton = document.getElementById("photobutton");
-
-    launchLiveVideo()
-
-    liveVideo.addEventListener(
-      "canplay",
-      (ev) => {
-        if (!streaming) {
-          height = liveVideo.videoHeight / (liveVideo.videoWidth / width);
-
-          // Firefox a un bug où la hauteur ne peut pas être lue
-          // à partir de la vidéo. On prend des précautions.
-
-          if (isNaN(height)) {
-            height = width / (4 / 3);
-          }
-
-          liveVideo.setAttribute("width", width);
-          liveVideo.setAttribute("height", height);
-          canvas.setAttribute("width", width);
-          canvas.setAttribute("height", height);
-          streaming = true;
-        }
-      },
-      false,
-    );
-
-    photobutton.addEventListener(
-      "click",
-      (ev) => {
-        takepicture();
-        ev.preventDefault();
-      },
-      false,
-    );
-
-    clearphoto();
-  }
-
-  // On remplit le cadre de la photo pour indiquer l'absence
-  // d'image capturée.
-
-  function clearphoto() {
-    const context = canvas.getContext("2d");
-    context.fillStyle = "#AAA";
-    context.fillRect(0, 0, canvas.width, canvas.height);
-
-    const data = canvas.toDataURL("image/png");
-    photo.setAttribute("src", data);
-  }
-
-  function takepicture() {
-    const context = canvas.getContext("2d");
-    liveVideo.style.display = "block"
-    outputVideo.style.display = "none"
-
-    if (width && height) {
-      canvas.width = width;
-      canvas.height = height;
-      context.drawImage(liveVideo, 0, 0, width, height);
-
-      const data = canvas.toDataURL("image/png");
-      photo.style.display = "block"
-      outputVideo.style.display = "none"
-      photo.setAttribute("src", data);
-    } else {
-      clearphoto();
-    }
-  }
-
-  async function startRecording() {
-        try {
-            redDot.style.display = "block"
-            liveVideo.style.display = "block"
-
-            stream = await navigator.mediaDevices.getUserMedia({ video: true, audio:true });
-            liveVideo.srcObject = stream;
-            liveVideo.play()
-
-            mediaRecorder = new MediaRecorder(stream);
-
-            mediaRecorder.ondataavailable = event => {
-                if (event.data.size > 0) {
-                    recordedChunks.push(event.data);
+                console.log("Time expired by K")
+                clearInterval(countdown);
+                timerElement.textContent = 'Time Expired!';
+                if (submitBtn != null) {
+                    submitBtn.disabled = true;
+                    submitBtn.style.display = 'none';
                 }
-            };
+                if (myForm != null) {
+                    myForm.style.display = 'none';
+                    myForm.disabled = true;
+                }
+                console.log("form disabled");
 
-            mediaRecorder.onstop = () => {
-                const recordedBlob = new Blob(recordedChunks, { type: 'video/webm' });
-                outputVideo.style.display = "block"
-                photo.style.display = "none"
-                outputVideo.src = URL.createObjectURL(recordedBlob);
-                outputVideo.controls = true;
-            };
-
-            console.log(outputVideo.src);
-
-            mediaRecorder.start();
-            
-            startButton.disabled = true;
-            startButton.style.backgroundColor = "lightgrey" 
-            stopButton.style.backgroundColor = "#e5e7eb" 
-            stopButton.disabled = false;
-        } catch (error) {
-            console.error('Error accessing media devices:', error);
-        }
+                fetch('/timer/{{username}}')
+            }
+        }, 1000);
     }
 
-  async function stopRecording() {
-      if (mediaRecorder.state === 'recording') {
-            redDot.style.display = "none"
-            liveVideo.style.display = "none"
-            mediaRecorder.stop();
-            stream.getTracks().forEach(track => track.stop());
-            liveVideo.srcObject = null;
-    
-            await new Promise(resolve => {
-                mediaRecorder.onstop = resolve;
-            });
+</script>
 
-            const recordedBlob = new Blob(recordedChunks, { type: 'video/webm' });
+<script>
+    const profileButton = document.getElementById('profileButton');
+    const slideOver = document.getElementById('slideOver');
+    const closeButton = document.getElementById('closeButton');
 
-            const formData = new FormData();
-            formData.append('video', recordedBlob, 'recorded_video.webm');
-            formData.append('username', 'replace_with_username'); // replace_with_username with the actual username
+    profileButton.addEventListener('click', () => {
+        slideOver.classList.remove('translate-x-full');
+    });
 
-            const response = await fetch('/upload_video/{{username}}', {
-                method: 'POST',
-                body: formData,
-            });
+    closeButton.addEventListener('click', () => {
+        slideOver.classList.add('translate-x-full');
+    });
 
-            const result = await response.text();
+    function verifUsername() {
 
-            startButton.disabled = false;
-            stopButton.disabled = true;
-            stopButton.style.backgroundColor = "lightgrey" 
-            startButton.style.backgroundColor = "#e5e7eb" 
-      }
-  }
-  
-  // On met en place un gestionnaire d'évènement pour exécuter
-  // le code lorsque le chargement du document est terminé.
-  window.addEventListener("load", startup, false);
-})();
+    }
+</script>
 
-    </script>
+<script>
+    (() => {
 
-    <style>
-        .buttonAnim:hover{
-            animation: "buttonAnim" 0.2s ease-in forwards;
+        const width = 320; // On met à l'échelle la photo pour avoir cette largeur
+        let height = 0; // On calcule cette valeur ensuite selon le flux d'entrée
+
+        // |streaming| indique si le flux vidéo est en cours
+        let streaming = false;
+        let canvas = null;
+        let photo = null;
+        let photobutton = null;
+        let stream;
+        let mediaRecorder;
+        let recordedChunks = [];
+        const startButton = document.getElementById('startButton');
+        const stopButton = document.getElementById('stopButton');
+        const outputVideo = document.getElementById("outputVideo");
+        const liveVideo = document.getElementById("liveVideo");
+        const redDot = document.getElementById('redDot');
+        startButton.addEventListener('click', startRecording);
+        stopButton.addEventListener('click', stopRecording);
+
+        function launchLiveVideo() {
+            navigator.mediaDevices
+                .getUserMedia({video: true})
+                .then((stream) => {
+                    liveVideo.srcObject = stream;
+                    liveVideo.play();
+                    return stream
+                })
+                .catch((err) => {
+                    console.error(`Une erreur est survenue : ${err}`);
+                });
         }
 
-        @keyframes buttonAnim{
-            100%{
-                box-shadow: 5px 5px 5px black;
+        function startup() {
+
+            canvas = document.getElementById("canvas");
+            photo = document.getElementById("photo");
+            photobutton = document.getElementById("photobutton");
+
+            launchLiveVideo()
+
+            liveVideo.addEventListener(
+                "canplay",
+                (ev) => {
+                    if (!streaming) {
+                        height = liveVideo.videoHeight / (liveVideo.videoWidth / width);
+
+                        // Firefox a un bug où la hauteur ne peut pas être lue
+                        // à partir de la vidéo. On prend des précautions.
+
+                        if (isNaN(height)) {
+                            height = width / (4 / 3);
+                        }
+
+                        liveVideo.setAttribute("width", width);
+                        liveVideo.setAttribute("height", height);
+                        canvas.setAttribute("width", width);
+                        canvas.setAttribute("height", height);
+                        streaming = true;
+                    }
+                },
+                false,
+            );
+
+            photobutton.addEventListener(
+                "click",
+                (ev) => {
+                    takepicture();
+                    ev.preventDefault();
+                },
+                false,
+            );
+
+            clearphoto();
+        }
+
+        // On remplit le cadre de la photo pour indiquer l'absence
+        // d'image capturée.
+
+        function clearphoto() {
+            const context = canvas.getContext("2d");
+            context.fillStyle = "#AAA";
+            context.fillRect(0, 0, canvas.width, canvas.height);
+
+            const data = canvas.toDataURL("image/png");
+            photo.setAttribute("src", data);
+        }
+
+        function takepicture() {
+            const context = canvas.getContext("2d");
+            liveVideo.style.display = "block"
+            outputVideo.style.display = "none"
+
+            if (width && height) {
+                canvas.width = width;
+                canvas.height = height;
+                context.drawImage(liveVideo, 0, 0, width, height);
+
+                const data = canvas.toDataURL("image/png");
+                photo.style.display = "block"
+                outputVideo.style.display = "none"
+                photo.setAttribute("src", data);
+            } else {
+                clearphoto();
             }
         }
-    </style>
+
+        async function startRecording() {
+            try {
+                redDot.style.display = "block"
+                liveVideo.style.display = "block"
+
+                stream = await navigator.mediaDevices.getUserMedia({video: true, audio: true});
+                liveVideo.srcObject = stream;
+                liveVideo.play()
+
+                mediaRecorder = new MediaRecorder(stream);
+
+                mediaRecorder.ondataavailable = event => {
+                    if (event.data.size > 0) {
+                        recordedChunks.push(event.data);
+                    }
+                };
+
+                mediaRecorder.onstop = () => {
+                    const recordedBlob = new Blob(recordedChunks, {type: 'video/webm'});
+                    outputVideo.style.display = "block"
+                    photo.style.display = "none"
+                    outputVideo.src = URL.createObjectURL(recordedBlob);
+                    outputVideo.controls = true;
+                };
+
+                console.log(outputVideo.src);
+
+                mediaRecorder.start();
+
+                startButton.disabled = true;
+                startButton.style.backgroundColor = "lightgrey"
+                stopButton.style.backgroundColor = "#e5e7eb"
+                stopButton.disabled = false;
+            } catch (error) {
+                console.error('Error accessing media devices:', error);
+            }
+        }
+
+        async function stopRecording() {
+            if (mediaRecorder.state === 'recording') {
+                redDot.style.display = "none"
+                liveVideo.style.display = "none"
+                mediaRecorder.stop();
+                stream.getTracks().forEach(track => track.stop());
+                liveVideo.srcObject = null;
+
+                await new Promise(resolve => {
+                    mediaRecorder.onstop = resolve;
+                });
+
+                const recordedBlob = new Blob(recordedChunks, {type: 'video/webm'});
+
+                const formData = new FormData();
+                formData.append('video', recordedBlob, 'recorded_video.webm');
+                formData.append('username', 'replace_with_username'); // replace_with_username with the actual username
+
+                const response = await fetch('/upload_video/{{username}}', {
+                    method: 'POST',
+                    body: formData,
+                });
+
+                const result = await response.text();
+
+                startButton.disabled = false;
+                stopButton.disabled = true;
+                stopButton.style.backgroundColor = "lightgrey"
+                startButton.style.backgroundColor = "#e5e7eb"
+            }
+        }
+
+        // On met en place un gestionnaire d'évènement pour exécuter
+        // le code lorsque le chargement du document est terminé.
+        window.addEventListener("load", startup, false);
+    })();
+
+</script>
+
+<style>
+    .buttonAnim:hover {
+        animation: "buttonAnim" 0.2s ease-in forwards;
+    }
+
+    @keyframes buttonAnim {
+        100% {
+            box-shadow: 5px 5px 5px black;
+        }
+    }
+</style>
 </body>
 </html>
