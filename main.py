@@ -117,7 +117,7 @@ def addVideo(id, video):
     back_url = urls[0]
     front_url = urls[1]
     
-    new_url = 'https://storage.googleapis.com/v0/b/' + back_url + "/o/" + front_url + "?alt=media"
+    new_url = 'https://firebasestorage.googleapis.com/v0/b/' + back_url + "/o/" + front_url + "?alt=media"
 
     userOutputData[id] = new_url
 
