@@ -1,5 +1,6 @@
 import os
 import random
+from datetime import datetime, timedelta
 
 from dotenv import load_dotenv
 
@@ -109,13 +110,22 @@ res_json = json.loads(response.content)
 # envoi à la db 
 ref_chall = db.reference("/challenges")
 
+current_time = datetime.now()
+
+# Ajoutez 20 minutes pour obtenir l'heure de fin
+end_time = current_time + timedelta(seconds=30)
+
+# Formattez les heures au format souhaité (par exemple, "HH:MM")
+formatted_current_time = current_time.strftime("%H:%M")
+formatted_end_time = end_time.strftime("%H:%M")
+
 chall_data = {
-    "id": 6,
+    "id": 9,
     "content": res_json["challenge"],
     "output": res_json["output"],
-    "userOutput": [],
-    "time_start": "2023-11-10T12:00:00+01:00",
-    "time_stop": "2023-11-15T18:00:00+01:00",
+    "userOutput": {2: "text"},
+    "time_start": formatted_current_time,
+    "time_stop": formatted_end_time,
 }
 
 ref_chall.child(str(chall_data["id"])).set(chall_data)
