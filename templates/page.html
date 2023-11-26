@@ -30,7 +30,7 @@
                 {% endfor %}
             </ul>
         </div>
-        <button onclick="(() => {window.location.href = '/challenges/{{username}}'})()" class="buttonAnim w-[80%] p-4 border border-black rounded ml-[10%] mt-auto mb-10">See submitted challenges!</button>
+        <button onclick="(() => {window.location.href = '/challenges/{{username}}'})()" class="buttonAnim w-[80%] p-4 border border-black rounded ml-[10%] mt-auto mb-10 bg-gray-400">See submitted challenges!</button>
     </div>
 
     <!-- To see the current challenge -->
@@ -129,7 +129,7 @@
             if (--timer < 0) {
               clearInterval(countdown);
               timerElement.textContent = 'Time Expired!';
-              fetch('/timer')
+              fetch('/timer/{{username}}')
             }
           }, 1000);
         }

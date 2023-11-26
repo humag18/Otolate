@@ -165,6 +165,7 @@ def substractPointToUser(id):
     user_data = ref_users.child(str(id)).get()
  
     user_data['score'] -= 5
+    user_data['score'] = max(user_data['score'], 0)
 
     db.reference(ref_user).update(user_data)
 
