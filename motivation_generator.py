@@ -25,6 +25,8 @@ from langchain.output_parsers import StructuredOutputParser
 import firebase_admin
 from firebase_admin import credentials, db
 
+from voice_generation import generate_voice
+
 load_dotenv()
 
 openai.api_key = os.environ["OPENAI_API_KEY"]
@@ -32,8 +34,7 @@ user = getUserById(2)
 
 def getPoint(user):
     score = user['score']
-    previous = user['previous_score']
-    if score<previous:
+    if score<100:
         form = 0
     else:
         form = 1 
@@ -76,6 +77,8 @@ def getPoint(user):
     ref_user = db.reference("/users")
     print(response.content)
     user['message'] = response.content
+
+    generate_voice(response.content)
     
     ref_user.child(str(user["id"])).update(user)
     print("Message de motivation envoyé!")

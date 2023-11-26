@@ -104,7 +104,6 @@ response = llm(messages)
 
 print(response.content)
 
-exit()
 res_json = json.loads(response.content)
 
 # envoi à la db 
@@ -113,7 +112,7 @@ ref_chall = db.reference("/challenges")
 current_time = datetime.now()
 
 # Ajoutez 20 minutes pour obtenir l'heure de fin
-end_time = current_time + timedelta(seconds=30)
+end_time = current_time + timedelta(minutes=1)
 
 # Formattez les heures au format souhaité (par exemple, "HH:MM")
 formatted_current_time = current_time.strftime("%H:%M")
