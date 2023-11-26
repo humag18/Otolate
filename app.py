@@ -2,7 +2,8 @@ import os, datetime
 from flask import Flask, render_template, redirect, request, url_for, session
 
 from main import (getUsersSortedByScore, getLastChallenge, getUserIdByName, getUserById, createUser,
-                  getChallengeWithIdWhereUserIs, addVideo, addTexte, addPointToUser, calculRemainingTime, getUsers,substractPointToUser)
+                  getChallengeWithIdWhereUserIs, addVideo, addTexte, addPointToUser, calculRemainingTime,
+                  getUsers,substractPointToUser, getUserMessage)
 
 app = Flask(__name__)
 app.secret_key = os.urandom(24)
@@ -27,17 +28,16 @@ def page(username):
     user = getUserById(session['current_user_id'])
     if user is None:
         user = createUser(username)
-    username = user['username']
     users = getUsersSortedByScore()
 
     id_challenge, challenge = getLastChallenge()
     output = challenge["output"]
     content = challenge["content"]
-
+    message = getUserMessage(username)
     timeStop = challenge["time_stop"]
     remainingTime = calculRemainingTime(timeStop)
 
-    return render_template('page.html', users=users, username=username, tool=output, challenge=content, time = remainingTime)
+    return render_template('page.html', users=users, username=username, tool=output, challenge=content, time = remainingTime, message = message)
 
 @app.route('/challenges/<username>')
 def challenges(username):
@@ -70,7 +70,6 @@ def upload_video(username):
         video_content = video_data.read()
         addVideo(user_id, video_content)
 
-        user_id = getUserIdByName(username)
         addPointToUser(user_id)
 
         return "Video uploaded successfully!"
