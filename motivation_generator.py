@@ -28,16 +28,13 @@ from firebase_admin import credentials, db
 load_dotenv()
 
 openai.api_key = os.environ["OPENAI_API_KEY"]
-
-"""userid = getUserIdByName("louisa")"""
-user = getUserById(2)
-score = user['score']
-previous = user['previous_score']
-print(score, previous)
-if score<previous:
-    form = 0
-else:
-    form = 1 
+def getPoint(user):
+    score = user['score']
+    previous = user['previous_score']
+    if score<previous:
+        form = 0.7
+    else:
+        form = 1 
 
 llm_model = "gpt-3.5-turbo"
 llm = ChatOpenAI(temperature=0.7, model=llm_model)
@@ -51,16 +48,20 @@ schemas = [response]
 output_parser = StructuredOutputParser.from_response_schemas(schemas)
 format_instructions = output_parser.get_format_instructions()
 
+file ={"message":""}
+
 template = """\
 
 You are a cray and fun organiser of fun challenges inside the office.
 you receive a daily score of all participants.
 Find a fun and trash sentence for différents case: If the {form} = 0 find a little sentences  to tell to your worker he is fired be trash and don't forget to tell him he's a real looser. If the {form} = 1 find a joke/meme to encourage your worker to continue like this!
 
+Here is the file you have to complete: {file}
+
 """
 
 prompt = ChatPromptTemplate.from_template(template=template)
 
-messages = prompt.format_messages(form = form, format_instructions=format_instructions)
+messages = prompt.format_messages(form = form, file=file, format_instructions=format_instructions)
 response = llm(messages)
 print(response.content)

@@ -68,8 +68,8 @@ def getUserById(id):
 def getUserIdByName(name):
     users = getUsers()
     for user in users:
-        if user[0] == name:
-            return user[2]
+        if user["username"] == name:
+            return user["id"]
     return None
 
 
