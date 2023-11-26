@@ -91,11 +91,12 @@
                 </div>
                 <!-- Submit Button -->
                 {% if tool != None and username != None and tool != "camera" and time > 0 %}
-                    <button type="submit" id="submitBtn" {% if disable_submit %}disabled{% endif %}
-                            style="{% if disable_submit %}display: none;{% endif %}"
+                    <button type="submit" id="submitBtn" 
                             class="buttonAnim py-2 px-4 bg-white border border-black rounded">
                         Submit
                     </button>
+                    <!-- {% if disable_submit %}disabled{% endif %}
+                    style="{% if disable_submit %}display: none;{% endif %}" -->
                 {% endif %}
             </form>
         {% endif %}
