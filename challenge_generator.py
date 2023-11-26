@@ -49,7 +49,7 @@ FirstName = ResponseSchema(
     )
 LastName = ResponseSchema(
     name="output",
-    description="video, pics, audio, text"
+    description="camera, text"
     )
 
 schemas = [FirstName, LastName]
@@ -57,33 +57,32 @@ schemas = [FirstName, LastName]
 output_parser = StructuredOutputParser.from_response_schemas(schemas)
 format_instructions = output_parser.get_format_instructions()
 
-coin = random.randint(0,5)
+coin = random.randint(0,1)
 
 print(coin)
 
 template = """\
 You are a crazy organiser of fun challenges inside the office. 
 You allways find new fun and crazy new challenges easy to do around the office.\
-Find new challenges easy todo in front of a computer camera. The challenge shouldn't take more than 1 min to relise.
+Find new challenges easy todo in front of a computer camera. The challenge shouldn't take more than 1 minunte to relise.
+Only 
 
-Here are some examples for the challenges Find other on the same register:  
-    -Write an unexpeted ending: It's raining cats and dogs...
-    -Say merry christmas the best possible way. 
-    -Try to imitate the bullet time from Matrix
-    -Pretend your desk is a battlefield of incoming "bullets."
-    -do the spiderman pose. 
-    -sing all I want for chirstmas is you.
-    -Reenact Forrest Gump's iconic running scene.
+Types examples of challenges with text: 
+    -Explain the plot of The movie [COMPLETE] in the worst possible way. Example: Lord of The Rings, Terminator, ...
+    -Write an alternative ending to [COMPLETE]. Example: Harry Potter, Game Of Thrones, ...
+    -Write [COMPLETE] the best possible way. Example: a lazy excuse, presentation starter, ...
+Types examples of challenges with videos:
+    -Try to imitate [COMPLETE] example: Jack Nicolson, Donald Trump
+    -Pretend your desk is [COMPLETE] example: battlefield of incoming bullets, uracain.
+    -Do the [COMPLETE] pose. example: spiderman, superman, ...
+    -Sing the liriks [COMPLETE]. example: All I want for christmas is you..
+    -Reenact [COMPLETE] scene. example: Forrest Gump's iconic running
 
-Do not ask: 
-    -to write poems or texts. 
-    -to write about an image or a caption.
-    -to write dialogs
-    
+Choose only a challenge from these uption on top.
 
 In the output you only have to say the desired format: 
     -text if you want the user to write a very short text
-    -video if the user has to make a video
+    -camera if the user has to make a video
 
 Format Ouput with the following keys:
 challenge
@@ -91,8 +90,8 @@ output
 
 Here is the following form: {form}
 
-To choose what king of challenges you are going to flip a coin if it is 2,3,4,5 you ask for a text challenge 
-If 0,1 ask for a video.
+To choose what king of challenges you are going to flip a coin if it is 0 you ask for a text challenge 
+If 1 ask for a video.
 
 coin value: {coin}
 """
@@ -105,6 +104,7 @@ response = llm(messages)
 
 print(response.content)
 
+exit()
 res_json = json.loads(response.content)
 
 # envoi à la db 
