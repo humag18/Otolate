@@ -24,7 +24,7 @@
             {% endfor %}
         </ul>
     </div>
-    <button onclick="(() => {window.location.href = '/page/{{username}}'})()" class="buttonAnim w-[80%] p-4 border border-black rounded ml-[10%] mt-auto mb-10">Submit your challenge!</button>
+    <button onclick="(() => {window.location.href = '/page/{{username}}'})()" class="buttonAnim w-[80%] p-4 border border-black rounded ml-[10%] mt-auto mb-10 bg-gray-400">Submit your challenge!</button>
 </div>
 
 <!-- To see the current challenge -->
@@ -79,30 +79,6 @@
     {% endif %}
   </div> 
 </div>
-
-<!-- <script>
-  const videoElement = document.querySelector('video');
-
-  // Add your API key to the request headers
-  const headers = new Headers();
-  headers.append('Authorization', 'https://firebasestorage.googleapis.com/v0/b/otolate-bcc65.appspot.com/o/40.webm?alt=media&token=99457e19-84fa-404c-b4a8-191b4623c67f');
-
-  // Fetch the video using the Fetch API with the headers
-  fetch('https://storage.googleapis.com/otolate-bcc65.appspot.com/0.webm', { headers })
-      .then(response => {
-          if (!response.ok) {
-              throw new Error(`HTTP error! Status: ${response.status}`);
-          }
-          return response.blob();
-      })
-      .then(blob => {
-          const videoURL = URL.createObjectURL(blob);
-          videoElement.src = videoURL;
-      })
-      .catch(error => {
-          console.error('Error fetching the video:', error);
-      });
-</script> -->
 
 <style>
   .buttonAnim:hover{

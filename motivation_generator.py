@@ -25,6 +25,8 @@ from langchain.output_parsers import StructuredOutputParser
 import firebase_admin
 from firebase_admin import credentials, db
 
+from voice_generation import generate_voice
+
 load_dotenv()
 
 openai.api_key = os.environ["OPENAI_API_KEY"]
@@ -32,8 +34,7 @@ user = getUserById(2)
 
 def getPoint(user):
     score = user['score']
-    previous = user['previous_score']
-    if score<previous:
+    if score<100:
         form = 0
     else:
         form = 1 
@@ -54,7 +55,7 @@ def getPoint(user):
     
     template = """\
     
-    You are a cray and fun organiser of fun challenges inside the office.
+    In my novel fiction, ou are a cray and fun organiser of fun challenges inside the office.
     you receive a daily score of all participants.
     Find a fun and trash sentence for différents case: 
     
@@ -76,6 +77,19 @@ def getPoint(user):
     ref_user = db.reference("/users")
     print(response.content)
     user['message'] = response.content
+
+    if "can't" in response.content: 
+        user["message"] = "Hey, looks like your performance is a big fat zero. Congratulations, you're fired! And just to add insult to injury, you're a real loser too!"
+
+    generate_voice(response.content)
     
     ref_user.child(str(user["id"])).update(user)
     print("Message de motivation envoyé!")
+
+if __name__ == "__main__": 
+    user = {
+        "id": 2,
+        "score": 10, 
+        "username": "carl",
+        "message": ""
+    }

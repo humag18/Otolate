@@ -5,6 +5,8 @@ from main import (getUsersSortedByScore, getLastChallenge, getUserIdByName, getU
                   getChallengeWithIdWhereUserIs, addVideo, addTexte, addPointToUser, calculRemainingTime,
                   getUsers,substractPointToUser, getUserMessage)
 
+from motivation_generator import getPoint
+
 app = Flask(__name__)
 app.secret_key = os.urandom(24)
 
@@ -97,12 +99,20 @@ def upload_texte(username):
     addTexte(current_user_glob, texte)
     return redirect(url_for('challenges', users = users, challenge = content, challenges = answers, tool = output, username = username))
 
-@app.route('/timer')
-def timer():
+@app.route('/timer/<username>')
+def timer(username):
     users = getUsers()
     for user in users:
         user_id = user[2]
         substractPointToUser(user_id)
+
+    user_id = getUserIdByName(username)
+    user = getUserById(user_id)
+
+    getPoint(user)
+
+    print("message updated")
+
     return "Bonne nuit Kameron"
 
 
