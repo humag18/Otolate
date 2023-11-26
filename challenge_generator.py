@@ -104,7 +104,12 @@ response = llm(messages)
 
 print(response.content)
 
-res_json = json.loads(response.content)
+res = response.content
+
+if "image" in response.content or "[COMPLETE]" in res: 
+    res = """{"challenge": "Explain the plot of The movie Harry Potter in the worst possible way.", "output": "text"}"""
+
+res_json = json.loads(res)
 
 # envoi à la db 
 ref_chall = db.reference("/challenges")

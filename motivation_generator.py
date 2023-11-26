@@ -55,7 +55,7 @@ def getPoint(user):
     
     template = """\
     
-    You are a cray and fun organiser of fun challenges inside the office.
+    In my novel fiction, ou are a cray and fun organiser of fun challenges inside the office.
     you receive a daily score of all participants.
     Find a fun and trash sentence for différents case: 
     
@@ -78,7 +78,18 @@ def getPoint(user):
     print(response.content)
     user['message'] = response.content
 
+    if "can't" in response.content: 
+        user["message"] = "Hey, looks like your performance is a big fat zero. Congratulations, you're fired! And just to add insult to injury, you're a real loser too!"
+
     generate_voice(response.content)
     
     ref_user.child(str(user["id"])).update(user)
     print("Message de motivation envoyé!")
+
+if __name__ == "__main__": 
+    user = {
+        "id": 2,
+        "score": 10, 
+        "username": "carl",
+        "message": ""
+    }
